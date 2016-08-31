@@ -37,10 +37,11 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Conta entity) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String createREST(Conta entity) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         super.create(entity);
+        return String.valueOf(entity.getId());
     }
 
     @PUT
@@ -88,5 +89,5 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

@@ -37,10 +37,11 @@ public class MovimentoFacadeREST extends AbstractFacade<Movimento> {
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Movimento entity) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String createREST(Movimento entity) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         super.create(entity);
+        return String.valueOf(entity.getId());
     }
 
     @PUT
@@ -88,5 +89,5 @@ public class MovimentoFacadeREST extends AbstractFacade<Movimento> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

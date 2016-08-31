@@ -35,39 +35,24 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "LinemobPessoa.findByNome", query = "SELECT l FROM LinemobPessoa l WHERE l.nome = :nome"),
     @NamedQuery(name = "LinemobPessoa.findByApelido", query = "SELECT l FROM LinemobPessoa l WHERE l.apelido = :apelido"),
     @NamedQuery(name = "LinemobPessoa.findByIdsqlite", query = "SELECT l FROM LinemobPessoa l WHERE l.idsqlite = :idsqlite")})
-public class Pessoa implements Serializable {
+public class Pessoa extends BaseModel {
 
-    private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ID")
-    private BigDecimal id;
     @Size(max = 4000)
     @Column(name = "NOME")
     private String nome;
     @Size(max = 4000)
     @Column(name = "APELIDO")
     private String apelido;
-    @Column(name = "IDSQLITE")
-    private BigInteger idsqlite;
+
     @OneToMany(mappedBy = "idpessoa")
     private Collection<Movimento> linemobMovimentoCollection;
 
     public Pessoa() {
     }
 
-    public Pessoa(BigDecimal id) {
-        this.id = id;
-    }
-
-    public BigDecimal getId() {
-        return id;
-    }
-
-    public void setId(BigDecimal id) {
-        this.id = id;
+    public Pessoa(String nome, String apelido) {
+        this.nome = nome;
+        this.apelido = apelido;
     }
 
     public String getNome() {
@@ -86,14 +71,6 @@ public class Pessoa implements Serializable {
         this.apelido = apelido;
     }
 
-    public BigInteger getIdsqlite() {
-        return idsqlite;
-    }
-
-    public void setIdsqlite(BigInteger idsqlite) {
-        this.idsqlite = idsqlite;
-    }
-
     @XmlTransient
     public Collection<Movimento> getLinemobMovimentoCollection() {
         return linemobMovimentoCollection;
@@ -102,30 +79,4 @@ public class Pessoa implements Serializable {
     public void setLinemobMovimentoCollection(Collection<Movimento> linemobMovimentoCollection) {
         this.linemobMovimentoCollection = linemobMovimentoCollection;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Pessoa)) {
-            return false;
-        }
-        Pessoa other = (Pessoa) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.linepack.linemobapi.LinemobPessoa[ id=" + id + " ]";
-    }
-    
 }

@@ -37,10 +37,11 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Usuario entity) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String createREST(Usuario entity) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         super.create(entity);
+        return String.valueOf(entity.getId());
     }
 
     @PUT
@@ -88,5 +89,5 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

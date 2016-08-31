@@ -6,6 +6,7 @@
 package com.linepack.linemobapi.service;
 
 import com.linepack.linemobapi.model.Cartao;
+import com.linepack.linemobapi.model.Usuario;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -37,10 +38,11 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
     }
 
     @POST
-    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Cartao entity) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public String createREST(Cartao entity) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         super.create(entity);
+        return String.valueOf(entity.getId());
     }
 
     @PUT
@@ -88,5 +90,5 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
     protected EntityManager getEntityManager() {
         return em;
     }
-    
+
 }

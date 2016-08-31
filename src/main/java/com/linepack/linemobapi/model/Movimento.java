@@ -5,19 +5,14 @@
  */
 package com.linepack.linemobapi.model;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -35,15 +30,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "LinemobMovimento.findByNatureza", query = "SELECT l FROM LinemobMovimento l WHERE l.natureza = :natureza"),
     @NamedQuery(name = "LinemobMovimento.findByDescricao", query = "SELECT l FROM LinemobMovimento l WHERE l.descricao = :descricao"),
     @NamedQuery(name = "LinemobMovimento.findByIdsqlite", query = "SELECT l FROM LinemobMovimento l WHERE l.idsqlite = :idsqlite")})
-public class Movimento implements Serializable {
+public class Movimento extends BaseModel {
 
-    private static final long serialVersionUID = 1L;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ID")
-    private BigDecimal id;
     @Column(name = "VALOR")
     private BigInteger valor;
     @Column(name = "NATUREZA")
@@ -51,8 +39,7 @@ public class Movimento implements Serializable {
     @Size(max = 4000)
     @Column(name = "DESCRICAO")
     private String descricao;
-    @Column(name = "IDSQLITE")
-    private BigInteger idsqlite;
+
     @JoinColumn(name = "IDCARTAO", referencedColumnName = "ID")
     @ManyToOne
     private Cartao idcartao;
@@ -69,16 +56,23 @@ public class Movimento implements Serializable {
     public Movimento() {
     }
 
-    public Movimento(BigDecimal id) {
-        this.id = id;
+    public Movimento(BigInteger valor, Character natureza, String descricao, Cartao idcartao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
+        this.valor = valor;
+        this.natureza = natureza;
+        this.descricao = descricao;
+        this.idcartao = idcartao;
+        this.idcategoria = idcategoria;
+        this.idconta = idconta;
+        this.idpessoa = idpessoa;
     }
 
-    public BigDecimal getId() {
-        return id;
-    }
-
-    public void setId(BigDecimal id) {
-        this.id = id;
+    public Movimento(BigInteger valor, Character natureza, String descricao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
+        this.valor = valor;
+        this.natureza = natureza;
+        this.descricao = descricao;
+        this.idcategoria = idcategoria;
+        this.idconta = idconta;
+        this.idpessoa = idpessoa;
     }
 
     public BigInteger getValor() {
@@ -103,14 +97,6 @@ public class Movimento implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public BigInteger getIdsqlite() {
-        return idsqlite;
-    }
-
-    public void setIdsqlite(BigInteger idsqlite) {
-        this.idsqlite = idsqlite;
     }
 
     public Cartao getIdcartao() {
@@ -144,30 +130,4 @@ public class Movimento implements Serializable {
     public void setIdpessoa(Pessoa idpessoa) {
         this.idpessoa = idpessoa;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Movimento)) {
-            return false;
-        }
-        Movimento other = (Movimento) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.linepack.linemobapi.LinemobMovimento[ id=" + id + " ]";
-    }
-    
 }

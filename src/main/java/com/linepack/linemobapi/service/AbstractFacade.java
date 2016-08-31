@@ -5,7 +5,6 @@
  */
 package com.linepack.linemobapi.service;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -43,15 +42,9 @@ public abstract class AbstractFacade<T> {
     }
 
     public List<T> findAll() {
-        List<T> list = new ArrayList<>();
-        try {
-            javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
-            cq.select(cq.from(entityClass));
-            list = getEntityManager().createQuery(cq).getResultList();
-        } catch (Exception e) {
-            Logger.getLogger(AbstractFacade.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return list;
+        javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        cq.select(cq.from(entityClass));
+        return getEntityManager().createQuery(cq).getResultList();
     }
 
     public List<T> findRange(int[] range) {
