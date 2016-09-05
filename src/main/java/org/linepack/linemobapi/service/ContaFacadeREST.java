@@ -33,9 +33,10 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     }
 
     @POST
+    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
-    public String createREST(Conta entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    public String create(Conta entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.create(entity);
     }
 
@@ -57,15 +58,17 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     @Override
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, Conta entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        super.edit(id, entity);
+    @Produces(MediaType.TEXT_PLAIN)
+    public String edit(@PathParam("id") String id, Conta entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        return super.edit(id, entity);
     }
     
     @DELETE
     @Override
     @Path("{id}")
-    public void remove(@PathParam("id") String id) throws UnknownHostException{
-        super.remove(id);
+    @Produces(MediaType.TEXT_PLAIN)
+    public String remove(@PathParam("id") String id) throws UnknownHostException{
+        return super.remove(id);
     }
 
 }

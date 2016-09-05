@@ -7,10 +7,13 @@ package org.linepack.linemobapi.service;
 
 import com.google.gson.Gson;
 import com.mongodb.Block;
-import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import java.lang.reflect.Field;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -18,9 +21,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
-import org.linepack.linemobapi.model.Conta;
 
 /**
  *
@@ -41,7 +42,11 @@ public abstract class AbstractFacade<T> {
         return db;
     }
 
-    private Document getDocument(T entity) throws IllegalArgumentException, IllegalAccessException {
+    private MongoCollection<Document> getMongoCollection() throws UnknownHostException {
+        return this.getMongoDatabase().getCollection(entityClass.getSimpleName());
+    }
+
+    private Document getDocumentFromEntity(T entity) throws IllegalArgumentException, IllegalAccessException {
         Document document = new Document();
         for (Field field : entity.getClass().getDeclaredFields()) {
             field.setAccessible(true);
@@ -76,37 +81,40 @@ public abstract class AbstractFacade<T> {
     }
 
     public String create(T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        Document document = this.getDocument(entity);
-        this.getMongoDatabase().getCollection(entity.getClass().getSimpleName()).insertOne(document);
+        Document document = this.getDocumentFromEntity(entity);
+        this.getMongoCollection().insertOne(document);
         return document.get("_id").toString();
     }
 
-    public void edit(String id, T entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public String edit(String id, T entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         try {
-            this.getMongoDatabase().getCollection(entity.getClass().getSimpleName()).replaceOne(
+            UpdateResult updateResult = this.getMongoCollection().replaceOne(
                     new Document("_id", new ObjectId(String.valueOf(id))),
-                    new Document(this.getDocument(entity))
+                    new Document(this.getDocumentFromEntity(entity))
             );
+            return String.valueOf(updateResult.getModifiedCount());
         } catch (IllegalAccessException iae) {
-
+            return "0";
         } catch (Exception ex) {
             Logger.getLogger(AbstractFacade.class.getName()).log(Level.SEVERE, null, ex);
+            return "0";
         }
     }
 
-    public void remove(String id) throws UnknownHostException {
+    public String remove(String id) throws UnknownHostException {
         try {
-            Bson filter = new Document("_id", new ObjectId(id));
-            this.getMongoDatabase().getCollection(entityClass.getClass().getSimpleName()).deleteOne(filter);
+            DeleteResult deleteResult = this.getMongoCollection().deleteOne(eq("_id", new ObjectId(id)));
+            return String.valueOf(deleteResult.getDeletedCount());
         } catch (Exception ex) {
             Logger.getLogger(AbstractFacade.class.getName()).log(Level.SEVERE, null, ex);
+            return "0";
         }
     }
 
     public T find(Object id) throws UnknownHostException {
         FindIterable iterable = null;
         try {
-            iterable = this.getMongoDatabase().getCollection(entityClass.getSimpleName()).find(
+            iterable = this.getMongoCollection().find(
                     new Document("_id", new ObjectId(String.valueOf(id)))
             );
         } catch (IllegalArgumentException iae) {
@@ -121,7 +129,7 @@ public abstract class AbstractFacade<T> {
     }
 
     public List<T> findAll() throws UnknownHostException {
-        FindIterable iterable = this.getMongoDatabase().getCollection(entityClass.getSimpleName()).find();
+        FindIterable iterable = this.getMongoCollection().find();
         return this.getListFromIterable(iterable);
     }
 
@@ -132,5 +140,4 @@ public abstract class AbstractFacade<T> {
     public int count() {
         return 1;
     }
-
 }
