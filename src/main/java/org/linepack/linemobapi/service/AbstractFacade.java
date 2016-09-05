@@ -133,11 +133,12 @@ public abstract class AbstractFacade<T> {
         return this.getListFromIterable(iterable);
     }
 
-    public List<T> findRange(int[] range) {
-        return null;
+    public List<T> findRange(Integer from, Integer to) throws UnknownHostException {
+        FindIterable iterable = this.getMongoCollection().find().skip(from).limit(to);
+        return this.getListFromIterable(iterable);
     }
 
-    public int count() {
-        return 1;
+    public Long count() throws UnknownHostException {
+        return this.getMongoCollection().count();
     }
 }

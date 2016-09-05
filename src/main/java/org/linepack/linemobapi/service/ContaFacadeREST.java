@@ -62,13 +62,29 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     public String edit(@PathParam("id") String id, Conta entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         return super.edit(id, entity);
     }
-    
+
     @DELETE
     @Override
     @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String remove(@PathParam("id") String id) throws UnknownHostException{
+    public String remove(@PathParam("id") String id) throws UnknownHostException {
         return super.remove(id);
+    }
+
+    @GET
+    @Override
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("/count")
+    public Long count() throws UnknownHostException {
+        return super.count();
+    }
+
+    @GET
+    @Override
+    @Path("{from}/{to}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Conta> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) throws UnknownHostException {
+        return super.findRange(from, to);
     }
 
 }
