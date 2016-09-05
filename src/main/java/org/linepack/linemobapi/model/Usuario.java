@@ -14,20 +14,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Usuario extends BaseModel {
 
-    private String usuario;
+    private String nome;
+    private String passWord;
 
     public Usuario() {
     }
 
-    public Usuario(String usuario) {
-        this.usuario = usuario;
+    public Usuario(String nome, String passWord) {
+        this.nome = nome;
+        this.passWord = passWord;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public String getNome() {
+        return nome;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
 }

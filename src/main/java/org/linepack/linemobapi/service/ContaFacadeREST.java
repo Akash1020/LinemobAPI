@@ -12,7 +12,6 @@ import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import static javax.ws.rs.HttpMethod.PUT;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -86,5 +85,4 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     public List<Conta> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) throws UnknownHostException {
         return super.findRange(from, to);
     }
-
 }

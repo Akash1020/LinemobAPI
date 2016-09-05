@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.HeaderParam;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -30,6 +31,10 @@ import org.bson.types.ObjectId;
 public abstract class AbstractFacade<T> {
 
     private Class<T> entityClass;
+    @HeaderParam("usuario")
+    String usuario;
+    @HeaderParam("token")
+    String token;
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -38,7 +43,7 @@ public abstract class AbstractFacade<T> {
     private MongoDatabase getMongoDatabase() throws UnknownHostException {
         MongoClient mongoClient = new MongoClient();
         MongoDatabase db;
-        db = mongoClient.getDatabase("linemob");
+        db = mongoClient.getDatabase(usuario);
         return db;
     }
 
@@ -140,5 +145,16 @@ public abstract class AbstractFacade<T> {
 
     public Long count() throws UnknownHostException {
         return this.getMongoCollection().count();
+    }
+
+    public String exists(T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        System.out.println(token);
+        FindIterable iterable = this.getMongoCollection().find(this.getDocumentFromEntity(entity));
+        List<T> list = new ArrayList<>();
+        list = this.getListFromIterable(iterable);
+        if (!list.isEmpty()) {
+            return "1";
+        }
+        return "0";
     }
 }
