@@ -3,39 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.linepack.linemobapi.model;
+package org.linepack.linemobapi.model;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.SequenceGenerator;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Leandro
  */
-@Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class BaseModel implements Serializable {
+public class BaseModel {
 
-    private static final long serialVersionUID = 1L;
+    private String id;
 
-    @Id
-    @SequenceGenerator(name = "SEQ_GEN", sequenceName = "SQ_LINEMOB", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GEN")
-    private BigDecimal id;
-
-    public BigDecimal getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(String id) {
         this.id = id;
     }
 

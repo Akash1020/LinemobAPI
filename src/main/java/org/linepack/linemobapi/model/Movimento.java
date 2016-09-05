@@ -3,60 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.linepack.linemobapi.model;
+package org.linepack.linemobapi.model;
 
-import java.math.BigInteger;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Leandro
  */
-@Entity
-@Table(name = "LINEMOB_MOVIMENTO")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "LinemobMovimento.findAll", query = "SELECT l FROM LinemobMovimento l"),
-    @NamedQuery(name = "LinemobMovimento.findById", query = "SELECT l FROM LinemobMovimento l WHERE l.id = :id"),
-    @NamedQuery(name = "LinemobMovimento.findByValor", query = "SELECT l FROM LinemobMovimento l WHERE l.valor = :valor"),
-    @NamedQuery(name = "LinemobMovimento.findByNatureza", query = "SELECT l FROM LinemobMovimento l WHERE l.natureza = :natureza"),
-    @NamedQuery(name = "LinemobMovimento.findByDescricao", query = "SELECT l FROM LinemobMovimento l WHERE l.descricao = :descricao"),
-    @NamedQuery(name = "LinemobMovimento.findByIdsqlite", query = "SELECT l FROM LinemobMovimento l WHERE l.idsqlite = :idsqlite")})
 public class Movimento extends BaseModel {
 
-    @Column(name = "VALOR")
-    private BigInteger valor;
-    @Column(name = "NATUREZA")
+    private Integer valor;
     private Character natureza;
-    @Size(max = 4000)
-    @Column(name = "DESCRICAO")
     private String descricao;
-
-    @JoinColumn(name = "IDCARTAO", referencedColumnName = "ID")
-    @ManyToOne
     private Cartao idcartao;
-    @JoinColumn(name = "IDCATEGORIA", referencedColumnName = "ID")
-    @ManyToOne
     private Categoria idcategoria;
-    @JoinColumn(name = "IDCONTA", referencedColumnName = "ID")
-    @ManyToOne
     private Conta idconta;
-    @JoinColumn(name = "IDPESSOA", referencedColumnName = "ID")
-    @ManyToOne
     private Pessoa idpessoa;
 
     public Movimento() {
     }
 
-    public Movimento(BigInteger valor, Character natureza, String descricao, Cartao idcartao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
+    public Movimento(Integer valor, Character natureza, String descricao, Cartao idcartao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
         this.valor = valor;
         this.natureza = natureza;
         this.descricao = descricao;
@@ -66,7 +35,7 @@ public class Movimento extends BaseModel {
         this.idpessoa = idpessoa;
     }
 
-    public Movimento(BigInteger valor, Character natureza, String descricao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
+    public Movimento(Integer valor, Character natureza, String descricao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
         this.valor = valor;
         this.natureza = natureza;
         this.descricao = descricao;
@@ -75,11 +44,11 @@ public class Movimento extends BaseModel {
         this.idpessoa = idpessoa;
     }
 
-    public BigInteger getValor() {
+    public Integer getValor() {
         return valor;
     }
 
-    public void setValor(BigInteger valor) {
+    public void setValor(Integer valor) {
         this.valor = valor;
     }
 
