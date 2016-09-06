@@ -8,7 +8,6 @@ package org.linepack.linemobapi.service;
 import java.net.UnknownHostException;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -27,11 +26,11 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         super(Usuario.class);
     }
 
-    @POST    
-    @Path("/exists")
+    @POST
+    @Path("/login")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces(MediaType.TEXT_PLAIN)
-    public String exists(Usuario entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.exists(entity);
+    @Produces(MediaType.TEXT_PLAIN)    
+    public Boolean login() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {        
+        return super.validaToken();
     }
 }

@@ -20,9 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.HeaderParam;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.linepack.linemobapi.exception.TokenUnauthorizedException;
+import org.linepack.linemobapi.model.Usuario;
 
 /**
  *
@@ -31,10 +36,8 @@ import org.bson.types.ObjectId;
 public abstract class AbstractFacade<T> {
 
     private Class<T> entityClass;
-    @HeaderParam("usuario")
-    String usuario;
-    @HeaderParam("token")
-    String token;
+    @Context
+    HttpHeaders headers;
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -43,7 +46,7 @@ public abstract class AbstractFacade<T> {
     private MongoDatabase getMongoDatabase() throws UnknownHostException {
         MongoClient mongoClient = new MongoClient();
         MongoDatabase db;
-        db = mongoClient.getDatabase(usuario);
+        db = mongoClient.getDatabase(headers.getHeaderString("Usuario"));
         return db;
     }
 
@@ -85,13 +88,19 @@ public abstract class AbstractFacade<T> {
         return list;
     }
 
-    public String create(T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    public String create(T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, TokenUnauthorizedException {        
+        if (!this.validaToken()) {
+            return null;
+        }
         Document document = this.getDocumentFromEntity(entity);
         this.getMongoCollection().insertOne(document);
         return document.get("_id").toString();
     }
 
-    public String edit(String id, T entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    public String edit(String id, T entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, TokenUnauthorizedException {
+        if (!this.validaToken()) {
+            return null;
+        }
         try {
             UpdateResult updateResult = this.getMongoCollection().replaceOne(
                     new Document("_id", new ObjectId(String.valueOf(id))),
@@ -106,7 +115,10 @@ public abstract class AbstractFacade<T> {
         }
     }
 
-    public String remove(String id) throws UnknownHostException {
+    public String remove(String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, TokenUnauthorizedException {
+        if (!this.validaToken()) {
+            return null;
+        }
         try {
             DeleteResult deleteResult = this.getMongoCollection().deleteOne(eq("_id", new ObjectId(id)));
             return String.valueOf(deleteResult.getDeletedCount());
@@ -116,7 +128,10 @@ public abstract class AbstractFacade<T> {
         }
     }
 
-    public T find(Object id) throws UnknownHostException {
+    public T find(Object id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, TokenUnauthorizedException {
+        if (!this.validaToken()) {
+            return null;
+        }
         FindIterable iterable = null;
         try {
             iterable = this.getMongoCollection().find(
@@ -133,28 +148,38 @@ public abstract class AbstractFacade<T> {
         return null;
     }
 
-    public List<T> findAll() throws UnknownHostException {
+    public List<T> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException, TokenUnauthorizedException {
+        if (!this.validaToken()) {
+            return null;
+        }
         FindIterable iterable = this.getMongoCollection().find();
         return this.getListFromIterable(iterable);
     }
 
-    public List<T> findRange(Integer from, Integer to) throws UnknownHostException {
+    public List<T> findRange(Integer from, Integer to) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, TokenUnauthorizedException {
+        if (!this.validaToken()) {
+            return null;
+        }
         FindIterable iterable = this.getMongoCollection().find().skip(from).limit(to);
         return this.getListFromIterable(iterable);
     }
 
-    public Long count() throws UnknownHostException {
+    public Long count() throws UnknownHostException, IllegalArgumentException, IllegalAccessException, TokenUnauthorizedException {
+        if (!this.validaToken()) {
+            return null;
+        }
         return this.getMongoCollection().count();
     }
-
-    public String exists(T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        System.out.println(token);
-        FindIterable iterable = this.getMongoCollection().find(this.getDocumentFromEntity(entity));
+                
+    public Boolean validaToken() throws UnknownHostException, IllegalArgumentException, IllegalAccessException, TokenUnauthorizedException {
+        Usuario usuario = new Usuario(headers.getHeaderString("Usuario"), headers.getHeaderString("Token"));
+        MongoCollection userCollection = this.getMongoDatabase().getCollection(usuario.getClass().getSimpleName());
+        FindIterable iterable = userCollection.find(this.getDocumentFromEntity((T) usuario));        
         List<T> list = new ArrayList<>();
         list = this.getListFromIterable(iterable);
         if (!list.isEmpty()) {
-            return "1";
-        }
-        return "0";
+            return true;
+        }        
+        throw new TokenUnauthorizedException();                
     }
 }
