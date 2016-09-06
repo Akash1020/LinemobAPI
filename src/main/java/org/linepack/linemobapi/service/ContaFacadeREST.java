@@ -42,14 +42,14 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     @GET
     @Override
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Conta> findAll() throws UnknownHostException {
+    public List<Conta> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.findAll();
     }
 
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Conta find(@PathParam("id") String id) throws UnknownHostException {
+    public Conta find(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.find(id);
     }
 
@@ -66,7 +66,7 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     @Override
     @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String remove(@PathParam("id") String id) throws UnknownHostException {
+    public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.remove(id);
     }
 
@@ -74,7 +74,7 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     @Override
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/count")
-    public Long count() throws UnknownHostException {
+    public Long count() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.count();
     }
 
@@ -82,7 +82,7 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     @Override
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Conta> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) throws UnknownHostException {
+    public List<Conta> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.findRange(from, to);
     }
 }
