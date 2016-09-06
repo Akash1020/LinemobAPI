@@ -15,14 +15,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Usuario extends BaseModel {
 
     private String nome;
-    private String passWord;
+    private String password;
 
     public Usuario() {
     }
 
-    public Usuario(String nome, String passWord) {
+    public Usuario(String nome, String password) {
         this.nome = nome;
-        this.passWord = passWord;
+        this.password = password;
     }
 
     public String getNome() {
@@ -33,12 +33,12 @@ public class Usuario extends BaseModel {
         this.nome = nome;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
 }

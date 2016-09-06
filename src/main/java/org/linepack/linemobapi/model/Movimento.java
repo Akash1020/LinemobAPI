@@ -17,31 +17,31 @@ public class Movimento extends BaseModel {
     private Integer valor;
     private Character natureza;
     private String descricao;
-    private Cartao idcartao;
-    private Categoria idcategoria;
-    private Conta idconta;
-    private Pessoa idpessoa;
+    private Cartao idCartao;
+    private Categoria idCategoria;
+    private Conta idConta;
+    private Pessoa idPessoa;
 
     public Movimento() {
     }
 
-    public Movimento(Integer valor, Character natureza, String descricao, Cartao idcartao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
+    public Movimento(Integer valor, Character natureza, String descricao, Cartao idCartao, Categoria idCategoria, Conta idConta, Pessoa idPessoa) {
         this.valor = valor;
         this.natureza = natureza;
         this.descricao = descricao;
-        this.idcartao = idcartao;
-        this.idcategoria = idcategoria;
-        this.idconta = idconta;
-        this.idpessoa = idpessoa;
+        this.idCartao = idCartao;
+        this.idCategoria = idCategoria;
+        this.idConta = idConta;
+        this.idPessoa = idPessoa;
     }
 
     public Movimento(Integer valor, Character natureza, String descricao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
         this.valor = valor;
         this.natureza = natureza;
         this.descricao = descricao;
-        this.idcategoria = idcategoria;
-        this.idconta = idconta;
-        this.idpessoa = idpessoa;
+        this.idCategoria = idcategoria;
+        this.idConta = idconta;
+        this.idPessoa = idpessoa;
     }
 
     public Integer getValor() {
@@ -68,35 +68,35 @@ public class Movimento extends BaseModel {
         this.descricao = descricao;
     }
 
-    public Cartao getIdcartao() {
-        return idcartao;
+    public Cartao getIdCartao() {
+        return idCartao;
     }
 
-    public void setIdcartao(Cartao idcartao) {
-        this.idcartao = idcartao;
+    public void setIdCartao(Cartao idCartao) {
+        this.idCartao = idCartao;
     }
 
-    public Categoria getIdcategoria() {
-        return idcategoria;
+    public Categoria getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setIdcategoria(Categoria idcategoria) {
-        this.idcategoria = idcategoria;
+    public void setIdCategoria(Categoria idCategoria) {
+        this.idCategoria = idCategoria;
     }
 
-    public Conta getIdconta() {
-        return idconta;
+    public Conta getIdConta() {
+        return idConta;
     }
 
-    public void setIdconta(Conta idconta) {
-        this.idconta = idconta;
+    public void setIdConta(Conta idConta) {
+        this.idConta = idConta;
     }
 
-    public Pessoa getIdpessoa() {
-        return idpessoa;
+    public Pessoa getIdPessoa() {
+        return idPessoa;
     }
 
-    public void setIdpessoa(Pessoa idpessoa) {
-        this.idpessoa = idpessoa;
+    public void setIdPessoa(Pessoa idPessoa) {
+        this.idPessoa = idPessoa;
     }
 }

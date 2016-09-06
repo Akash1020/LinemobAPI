@@ -5,9 +5,7 @@
  */
 package org.linepack.linemobapi.model;
 
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -17,14 +15,14 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Categoria extends BaseModel {
 
     private String nome;
-    private String nomesubcategoria;
+    private String nomeSubCategoria;
 
     public Categoria() {
     }
 
-    public Categoria(String nome, String nomesubcategoria) {
+    public Categoria(String nome, String nomeSubCategoria) {
         this.nome = nome;
-        this.nomesubcategoria = nomesubcategoria;
+        this.nomeSubCategoria = nomeSubCategoria;
     }
 
     public Categoria(String nome) {
@@ -39,12 +37,12 @@ public class Categoria extends BaseModel {
         this.nome = nome;
     }
 
-    public String getNomesubcategoria() {
-        return nomesubcategoria;
+    public String getNomeSubCategoria() {
+        return nomeSubCategoria;
     }
 
-    public void setNomesubcategoria(String nomesubcategoria) {
-        this.nomesubcategoria = nomesubcategoria;
+    public void setNomeSubCategoria(String nomeSubCategoria) {
+        this.nomeSubCategoria = nomeSubCategoria;
     }
 
 }

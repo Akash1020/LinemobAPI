@@ -54,8 +54,9 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     }
 
     @GET
+    @Override
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})    
     public Conta find(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.find(id);
     }
@@ -75,7 +76,7 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     @Produces(MediaType.TEXT_PLAIN)
     public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         Document cartaoDocument = new Document("idConta", id);
-        List<Cartao> cartaoList = cartaoFacadeREST.findByDocument(cartaoDocument);
+        List<Cartao> cartaoList = cartaoFacadeREST.findByDocument(cartaoDocument);        
         if (!cartaoList.isEmpty()) {
             throw new ContaVinculadaComCartaoException();
         }

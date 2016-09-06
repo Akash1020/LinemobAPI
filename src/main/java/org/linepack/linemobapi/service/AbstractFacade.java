@@ -31,12 +31,13 @@ import org.linepack.linemobapi.model.Usuario;
 /**
  *
  * @author Leandro
+ * @param <T>
  */
 public abstract class AbstractFacade<T> {
 
-    private Class<T> entityClass;
+    private final Class<T> entityClass;
     @Context
-    HttpHeaders headers;
+    private HttpHeaders headers;
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -117,7 +118,7 @@ public abstract class AbstractFacade<T> {
         }
     }
 
-    public T find(Object id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    public T find(String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         this.validaToken();
         FindIterable iterable = null;
         try {
@@ -127,7 +128,7 @@ public abstract class AbstractFacade<T> {
         } catch (IllegalArgumentException iae) {
         }
 
-        List<T> list = new ArrayList<>();
+        List<T> list;
         list = this.getListFromIterable(iterable);
         if (!list.isEmpty()) {
             return (T) list.get(0);
@@ -152,7 +153,7 @@ public abstract class AbstractFacade<T> {
         FindIterable iterable = this.getMongoCollection().find(document);
         return this.getListFromIterable(iterable);
     }
-
+        
     public Long count() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         this.validaToken();
         return this.getMongoCollection().count();
@@ -166,8 +167,8 @@ public abstract class AbstractFacade<T> {
 
         Usuario usuario = new Usuario(headers.getHeaderString("Usuario"), headers.getHeaderString("Token"));
         MongoCollection userCollection = this.getMongoDatabase().getCollection(usuario.getClass().getSimpleName());
-        FindIterable iterable = userCollection.find(this.getDocumentFromEntity((T) usuario));
-        List<T> list = new ArrayList<>();
+        FindIterable iterable = userCollection.find(this.getDocumentFromEntity((T) usuario));        
+        List<T> list;
         list = this.getListFromIterable(iterable);
         if (!list.isEmpty()) {
             return true;
