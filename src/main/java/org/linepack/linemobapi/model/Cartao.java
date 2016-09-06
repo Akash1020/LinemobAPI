@@ -5,9 +5,7 @@
  */
 package org.linepack.linemobapi.model;
 
-import java.util.Collection;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -17,20 +15,20 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Cartao extends BaseModel {
 
     private String nome;
-    private Integer diavencimento;
-    private Integer diafechamento;
-    private Integer valorlimite;
-    private Conta idconta;
+    private Integer diaVencimento;
+    private Integer diaFechamento;
+    private Integer valorLimite;
+    private String idConta;
 
     public Cartao() {
     }
 
-    public Cartao(String nome, Integer diavencimento, Integer diafechamento, Integer valorlimite, Conta idconta) {
+    public Cartao(String nome, Integer diaVencimento, Integer diaFechamento, Integer valorLimite, String idConta) {
         this.nome = nome;
-        this.diavencimento = diavencimento;
-        this.diafechamento = diafechamento;
-        this.valorlimite = valorlimite;
-        this.idconta = idconta;
+        this.diaVencimento = diaVencimento;
+        this.diaFechamento = diaFechamento;
+        this.valorLimite = valorLimite;
+        this.idConta = idConta;
     }
 
     public String getNome() {
@@ -41,36 +39,35 @@ public class Cartao extends BaseModel {
         this.nome = nome;
     }
 
-    public Integer getDiavencimento() {
-        return diavencimento;
+    public Integer getDiaVencimento() {
+        return diaVencimento;
     }
 
-    public void setDiavencimento(Integer diavencimento) {
-        this.diavencimento = diavencimento;
+    public void setDiaVencimento(Integer diaVencimento) {
+        this.diaVencimento = diaVencimento;
     }
 
-    public Integer getDiafechamento() {
-        return diafechamento;
+    public Integer getDiaFechamento() {
+        return diaFechamento;
     }
 
-    public void setDiafechamento(Integer diafechamento) {
-        this.diafechamento = diafechamento;
+    public void setDiaFechamento(Integer diaFechamento) {
+        this.diaFechamento = diaFechamento;
     }
 
-    public Integer getValorlimite() {
-        return valorlimite;
+    public Integer getValorLimite() {
+        return valorLimite;
     }
 
-    public void setValorlimite(Integer valorlimite) {
-        this.valorlimite = valorlimite;
+    public void setValorLimite(Integer valorLimite) {
+        this.valorLimite = valorLimite;
     }
 
-    public Conta getIdconta() {
-        return idconta;
+    public String getIdConta() {
+        return idConta;
     }
 
-    public void setIdconta(Conta idconta) {
-        this.idconta = idconta;
+    public void setIdConta(String idConta) {
+        this.idConta = idConta;
     }
-
 }

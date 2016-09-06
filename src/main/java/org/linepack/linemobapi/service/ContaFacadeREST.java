@@ -7,6 +7,7 @@ package org.linepack.linemobapi.service;
 
 import java.net.UnknownHostException;
 import java.util.List;
+import javax.ejb.EJB;
 import org.linepack.linemobapi.model.Conta;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -18,6 +19,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.bson.Document;
+import org.linepack.linemobapi.exception.ContaVinculadaComCartaoException;
+import org.linepack.linemobapi.model.Cartao;
 
 /**
  *
@@ -26,6 +30,9 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 @Path("conta")
 public class ContaFacadeREST extends AbstractFacade<Conta> {
+
+    @EJB
+    private CartaoFacadeREST cartaoFacadeREST;
 
     public ContaFacadeREST() {
         super(Conta.class);
@@ -67,6 +74,11 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
     @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
     public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        Document cartaoDocument = new Document("idConta", id);
+        List<Cartao> cartaoList = cartaoFacadeREST.findByDocument(cartaoDocument);
+        if (!cartaoList.isEmpty()) {
+            throw new ContaVinculadaComCartaoException();
+        }
         return super.remove(id);
     }
 

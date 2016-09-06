@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.ForbiddenException;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import org.bson.Document;
@@ -103,11 +102,8 @@ public abstract class AbstractFacade<T> {
                     new Document(this.getDocumentFromEntity(entity))
             );
             return String.valueOf(updateResult.getModifiedCount());
-        } catch (IllegalAccessException iae) {
-            return "0";
-        } catch (Exception ex) {
-            Logger.getLogger(AbstractFacade.class.getName()).log(Level.SEVERE, null, ex);
-            return "0";
+        } catch (UnknownHostException | IllegalArgumentException | IllegalAccessException ex) {
+            throw ex;
         }
     }
 
@@ -117,8 +113,7 @@ public abstract class AbstractFacade<T> {
             DeleteResult deleteResult = this.getMongoCollection().deleteOne(eq("_id", new ObjectId(id)));
             return String.valueOf(deleteResult.getDeletedCount());
         } catch (Exception ex) {
-            Logger.getLogger(AbstractFacade.class.getName()).log(Level.SEVERE, null, ex);
-            return "0";
+            throw ex;
         }
     }
 
@@ -151,6 +146,12 @@ public abstract class AbstractFacade<T> {
         FindIterable iterable = this.getMongoCollection().find().skip(from).limit(to);
         return this.getListFromIterable(iterable);
     }
+    
+    public List<T> findByDocument(Document document) throws UnknownHostException, IllegalArgumentException, IllegalAccessException{        
+        this.validaToken();
+        FindIterable iterable = this.getMongoCollection().find(document);
+        return this.getListFromIterable(iterable);
+    }
 
     public Long count() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         this.validaToken();
@@ -160,7 +161,7 @@ public abstract class AbstractFacade<T> {
     public Boolean validaToken() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         if (headers.getHeaderString("Usuario") == null
                 || headers.getHeaderString("Token") == null) {
-            throw new HeadlessException("Invalid Headers!");
+            throw new HeadlessException();
         }
 
         Usuario usuario = new Usuario(headers.getHeaderString("Usuario"), headers.getHeaderString("Token"));
