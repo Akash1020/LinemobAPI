@@ -21,10 +21,10 @@ public class Conta extends BaseModel {
     public Conta() {
     }
 
-    public Conta(String nome, String datafundacao, Integer valorsaldoinicial) {
+    public Conta(String nome, String dataFundacao, Integer valorSaldoInicial) {
         this.nome = nome;
-        this.dataFundacao = datafundacao;
-        this.valorSaldoInicial = valorsaldoinicial;
+        this.dataFundacao = dataFundacao;
+        this.valorSaldoInicial = valorSaldoInicial;
     }
 
     public String getNome() {

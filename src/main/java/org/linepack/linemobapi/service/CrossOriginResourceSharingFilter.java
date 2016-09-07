@@ -15,7 +15,7 @@ import javax.ws.rs.ext.Provider;
  * @author Leandro
  */
 @Provider
-public class NewCrossOriginResourceSharingFilter implements ContainerResponseFilter {
+public class CrossOriginResourceSharingFilter implements ContainerResponseFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext response) {
