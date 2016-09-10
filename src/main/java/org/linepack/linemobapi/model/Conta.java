@@ -27,6 +27,14 @@ public class Conta extends BaseModel {
         this.valorSaldoInicial = valorSaldoInicial;
     }
 
+    public String getDataFundacao() {
+        return dataFundacao;
+    }
+
+    public void setDataFundacao(String dataFundacao) {
+        this.dataFundacao = dataFundacao;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -35,20 +43,12 @@ public class Conta extends BaseModel {
         this.nome = nome;
     }
 
-    public String getDatafundacao() {
-        return dataFundacao;
-    }
-
-    public void setDatafundacao(String datafundacao) {
-        this.dataFundacao = datafundacao;
-    }
-
-    public Integer getValorsaldoinicial() {
+    public Integer getValorSaldoInicial() {
         return valorSaldoInicial;
     }
 
-    public void setValorsaldoinicial(Integer valorsaldoinicial) {
-        this.valorSaldoInicial = valorsaldoinicial;
+    public void setValorSaldoInicial(Integer valorSaldoInicial) {
+        this.valorSaldoInicial = valorSaldoInicial;
     }
 
 }

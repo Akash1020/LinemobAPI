@@ -12,26 +12,28 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import org.linepack.linemobapi.model.Usuario;
+import org.linepack.linemobapi.model.Categoria;
 
 /**
  *
  * @author Leandro
  */
 @Stateless
-@Path("usuario")
-public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
+@Path("categoria")
+public class CategoriaFacadeREST extends AbstractFacade<Categoria>{
 
-    public UsuarioFacadeREST() {
-        super(Usuario.class);
+    public CategoriaFacadeREST() {
+        super(Categoria.class);
     }
-
+    
     @POST
-    @Path("/login")
+    @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
-    public Boolean login() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        //return super.validaToken();
-        return true;
+    public String create(Categoria entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.create(entity);
     }
+    
+    
+    
 }
