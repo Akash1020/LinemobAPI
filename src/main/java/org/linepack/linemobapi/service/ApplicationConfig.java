@@ -32,7 +32,7 @@ public class ApplicationConfig extends Application {
         resources.add(org.linepack.linemobapi.service.CartaoFacadeREST.class);        
         resources.add(org.linepack.linemobapi.service.CategoriaFacadeREST.class);
         resources.add(org.linepack.linemobapi.service.ContaFacadeREST.class);
-        resources.add(org.linepack.linemobapi.service.CrossOriginResourceSharingFilter.class);
+        resources.add(org.linepack.linemobapi.service.ContainerResponseFilterImpl.class);
         resources.add(org.linepack.linemobapi.service.MovimentoFacadeREST.class);
         resources.add(org.linepack.linemobapi.service.PessoFacadeREST.class);
         resources.add(org.linepack.linemobapi.service.UsuarioFacadeREST.class);
