@@ -60,5 +60,4 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
             throw new ForbiddenException();
         }
     }
-
 }

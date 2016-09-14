@@ -20,9 +20,9 @@ import org.linepack.linemobapi.model.Pessoa;
  */
 @Stateless
 @Path("pessoa")
-public class PessoFacadeREST extends AbstractFacade<Pessoa>{
+public class PessoaFacadeREST extends AbstractFacade<Pessoa>{
 
-    public PessoFacadeREST() {
+    public PessoaFacadeREST() {
         super(Pessoa.class);        
     }
     

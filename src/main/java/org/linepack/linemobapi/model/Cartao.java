@@ -18,7 +18,7 @@ public class Cartao extends BaseModel {
     private Integer diaVencimento;
     private Integer diaFechamento;
     private Integer valorLimite;
-    private String idConta;
+    private String idExternoConta;
 
     public Cartao() {
     }
@@ -28,7 +28,7 @@ public class Cartao extends BaseModel {
         this.diaVencimento = diaVencimento;
         this.diaFechamento = diaFechamento;
         this.valorLimite = valorLimite;
-        this.idConta = idConta;
+        this.idExternoConta = idConta;
     }
 
     public String getNome() {
@@ -63,11 +63,11 @@ public class Cartao extends BaseModel {
         this.valorLimite = valorLimite;
     }
 
-    public String getIdConta() {
-        return idConta;
+    public String getIdExternoConta() {
+        return idExternoConta;
     }
 
-    public void setIdConta(String idConta) {
-        this.idConta = idConta;
+    public void setIdExternoConta(String idExternoConta) {
+        this.idExternoConta = idExternoConta;
     }
 }

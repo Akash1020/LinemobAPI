@@ -90,7 +90,7 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
     public String create(Cartao entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        Conta conta = contaFacadeREST.find(entity.getIdConta());
+        Conta conta = contaFacadeREST.find(entity.getIdExternoConta());
         if (conta == null) {
             throw new ContaNotFoundException();
         }

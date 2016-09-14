@@ -14,34 +14,45 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Movimento extends BaseModel {
 
+    private String dataLancamento;
+    private String dataVencimento;
     private Integer valor;
     private Character natureza;
     private String descricao;
-    private Cartao idCartao;
-    private Categoria idCategoria;
-    private Conta idConta;
-    private Pessoa idPessoa;
+    private String idExternoCartao;
+    private String idExternoCategoria;
+    private String idExternoConta;
+    private String idExternoPessoa;
 
     public Movimento() {
     }
 
-    public Movimento(Integer valor, Character natureza, String descricao, Cartao idCartao, Categoria idCategoria, Conta idConta, Pessoa idPessoa) {
+    public Movimento(String dataLancamento, String dataVencimento, Integer valor, Character natureza, String descricao, String idExternoCartao, String idExternoCategoria, String idExternoConta, String idExternoPessoa) {
+        this.dataLancamento = dataLancamento;
+        this.dataVencimento = dataVencimento;
         this.valor = valor;
         this.natureza = natureza;
         this.descricao = descricao;
-        this.idCartao = idCartao;
-        this.idCategoria = idCategoria;
-        this.idConta = idConta;
-        this.idPessoa = idPessoa;
+        this.idExternoCartao = idExternoCartao;
+        this.idExternoCategoria = idExternoCategoria;
+        this.idExternoConta = idExternoConta;
+        this.idExternoPessoa = idExternoPessoa;
     }
 
-    public Movimento(Integer valor, Character natureza, String descricao, Categoria idcategoria, Conta idconta, Pessoa idpessoa) {
-        this.valor = valor;
-        this.natureza = natureza;
-        this.descricao = descricao;
-        this.idCategoria = idcategoria;
-        this.idConta = idconta;
-        this.idPessoa = idpessoa;
+    public String getDataLancamento() {
+        return dataLancamento;
+    }
+
+    public void setDataLancamento(String dataLancamento) {
+        this.dataLancamento = dataLancamento;
+    }
+
+    public String getDataVencimento() {
+        return dataVencimento;
+    }
+
+    public void setDataVencimento(String dataVencimento) {
+        this.dataVencimento = dataVencimento;
     }
 
     public Integer getValor() {
@@ -68,35 +79,36 @@ public class Movimento extends BaseModel {
         this.descricao = descricao;
     }
 
-    public Cartao getIdCartao() {
-        return idCartao;
+    public String getIdExternoCartao() {
+        return idExternoCartao;
     }
 
-    public void setIdCartao(Cartao idCartao) {
-        this.idCartao = idCartao;
+    public void setIdExternoCartao(String idExternoCartao) {
+        this.idExternoCartao = idExternoCartao;
     }
 
-    public Categoria getIdCategoria() {
-        return idCategoria;
+    public String getIdExternoCategoria() {
+        return idExternoCategoria;
     }
 
-    public void setIdCategoria(Categoria idCategoria) {
-        this.idCategoria = idCategoria;
+    public void setIdExternoCategoria(String idExternoCategoria) {
+        this.idExternoCategoria = idExternoCategoria;
     }
 
-    public Conta getIdConta() {
-        return idConta;
+    public String getIdExternoConta() {
+        return idExternoConta;
     }
 
-    public void setIdConta(Conta idConta) {
-        this.idConta = idConta;
+    public void setIdExternoConta(String idExternoConta) {
+        this.idExternoConta = idExternoConta;
     }
 
-    public Pessoa getIdPessoa() {
-        return idPessoa;
+    public String getIdExternoPessoa() {
+        return idExternoPessoa;
     }
 
-    public void setIdPessoa(Pessoa idPessoa) {
-        this.idPessoa = idPessoa;
+    public void setIdExternoPessoa(String idExternoPessoa) {
+        this.idExternoPessoa = idExternoPessoa;
     }
+
 }

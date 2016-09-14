@@ -35,7 +35,7 @@ public class ApplicationConfig extends Application {
         resources.add(org.linepack.linemobapi.service.ContainerRequestFilterImpl.class);
         resources.add(org.linepack.linemobapi.service.ContainerResponseFilterImpl.class);
         resources.add(org.linepack.linemobapi.service.MovimentoFacadeREST.class);
-        resources.add(org.linepack.linemobapi.service.PessoFacadeREST.class);
+        resources.add(org.linepack.linemobapi.service.PessoaFacadeREST.class);
         resources.add(org.linepack.linemobapi.service.UsuarioFacadeREST.class);
     }
     
