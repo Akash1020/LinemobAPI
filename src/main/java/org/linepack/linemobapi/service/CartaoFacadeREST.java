@@ -18,9 +18,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.bson.Document;
 import org.linepack.linemobapi.exception.ContaNotFoundException;
 import org.linepack.linemobapi.model.Cartao;
 import org.linepack.linemobapi.model.Conta;
+import org.linepack.linemobapi.model.Movimento;
 
 /**
  *
@@ -32,57 +34,11 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
 
     @EJB
     private ContaFacadeREST contaFacadeREST;
+    @EJB 
+    private MovimentoFacadeREST movimentoFacadeREST;
 
     public CartaoFacadeREST() {
         super(Cartao.class);
-    }
-
-    @GET
-    @Path("/count")
-    @Override
-    @Produces(MediaType.TEXT_PLAIN)
-    public Long count() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.count();
-    }
-
-    @GET
-    @Path("{from}/{to}")
-    @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Cartao> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.findRange(from, to);
-    }
-
-    @GET
-    @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Cartao> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.findAll();
-    }
-
-    @GET
-    @Override
-    @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Cartao find(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.find(id);
-    }
-
-    @DELETE
-    @Path("{id}")
-    @Override
-    @Produces(MediaType.TEXT_XML)
-    public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.remove(id);
-    }
-
-    @PUT
-    @Override
-    @Path("{id}")
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces(MediaType.TEXT_PLAIN)
-    public String edit(@PathParam("id") String id, Cartao entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        return super.edit(id, entity);
     }
 
     @POST
@@ -95,5 +51,42 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
             throw new ContaNotFoundException();
         }
         return super.create(entity);
+    }
+
+    @DELETE
+    @Path("{id}")
+    @Override
+    @Produces(MediaType.TEXT_XML)
+    public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        Document document = new Document("idExternoCartao", id);
+        List<Movimento> movimentoList = movimentoFacadeREST.findByDocument(document);
+        if (!movimentoList.isEmpty()){
+            return "server-messages.remove-cartao-used-movimento";
+        }
+        return super.remove(id);
+    }
+
+    @PUT
+    @Override
+    @Path("{id}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces(MediaType.TEXT_PLAIN)
+    public String edit(@PathParam("id") String id, Cartao entity) throws UnknownHostException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        return super.edit(id, entity);
+    }
+
+    @GET
+    @Override
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Cartao> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.findAll();
+    }
+
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Override
+    public Cartao find(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.find(id);
     }
 }

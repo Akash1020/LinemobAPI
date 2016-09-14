@@ -20,8 +20,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.bson.Document;
-import org.linepack.linemobapi.exception.ContaVinculadaComCartaoException;
 import org.linepack.linemobapi.model.Cartao;
+import org.linepack.linemobapi.model.Movimento;
 
 /**
  *
@@ -33,6 +33,8 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
 
     @EJB
     private CartaoFacadeREST cartaoFacadeREST;
+    @EJB
+    private MovimentoFacadeREST movimentoFacadeREST;
 
     public ContaFacadeREST() {
         super(Conta.class);
@@ -46,19 +48,21 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
         return super.create(entity);
     }
 
-    @GET
-    @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Conta> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.findAll();
-    }
-
-    @GET
+    @DELETE
     @Override
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})    
-    public Conta find(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.find(id);
+    @Produces(MediaType.TEXT_PLAIN)
+    public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        Document document = new Document("idExternoConta", id);
+        List<Cartao> cartaoList = cartaoFacadeREST.findByDocument(document);
+        if (!cartaoList.isEmpty()) {
+            return "server-messages.remove-conta-used-cartao";
+        }
+        List<Movimento> movimentoList = movimentoFacadeREST.findByDocument(document);
+        if (!movimentoList.isEmpty()) {
+            return "server-messages.remove-conta-used-movimento";
+        }
+        return super.remove(id);
     }
 
     @PUT
@@ -70,32 +74,18 @@ public class ContaFacadeREST extends AbstractFacade<Conta> {
         return super.edit(id, entity);
     }
 
-    @DELETE
-    @Override
-    @Path("{id}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        Document cartaoDocument = new Document("idConta", id);
-        List<Cartao> cartaoList = cartaoFacadeREST.findByDocument(cartaoDocument);        
-        if (!cartaoList.isEmpty()) {
-            throw new ContaVinculadaComCartaoException();
-        }
-        return super.remove(id);
-    }
-
     @GET
     @Override
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/count")
-    public Long count() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.count();
-    }
-
-    @GET
-    @Override
-    @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Conta> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.findRange(from, to);
+    public List<Conta> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.findAll();
+    }
+
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Override
+    public Conta find(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.find(id);
     }
 }
