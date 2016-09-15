@@ -18,7 +18,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.linepack.linemobapi.model.Cartao;
+import org.linepack.linemobapi.model.Categoria;
+import org.linepack.linemobapi.model.Conta;
 import org.linepack.linemobapi.model.Movimento;
+import org.linepack.linemobapi.model.Pessoa;
 
 /**
  *
@@ -46,7 +50,24 @@ public class MovimentoFacadeREST extends AbstractFacade<Movimento> {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
     public String create(Movimento entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        //Criar rotina para validar a existência dos filhos//
+        Conta conta = contaFacadeREST.find(entity.getIdExternoConta());
+        if (conta == null) {
+            return "server-message.insert-movimento-without-conta";
+        }
+        Pessoa pessoa = pessoaFacadeREST.find(entity.getIdExternoPessoa());
+        if (pessoa == null) {
+            return "server-message.insert-movimento-without-pessoa";
+        }
+        Categoria categoria = categoriaFacadeREST.find(entity.getIdExternoCategoria());
+        if (categoria == null) {
+            return "server-message.insert-movimento-without-categora";
+        }
+        if (entity.getIdExternoCartao() != null) {
+            Cartao cartao = cartaoFacadeREST.find(entity.getIdExternoCartao());
+            if (cartao == null) {
+                return "server-message.insert-movimento-without-cartao";
+            }
+        }
         return super.create(entity);
     }
 

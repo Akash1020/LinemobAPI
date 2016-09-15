@@ -19,7 +19,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.bson.Document;
-import org.linepack.linemobapi.exception.ContaNotFoundException;
 import org.linepack.linemobapi.model.Cartao;
 import org.linepack.linemobapi.model.Conta;
 import org.linepack.linemobapi.model.Movimento;
@@ -48,7 +47,7 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
     public String create(Cartao entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         Conta conta = contaFacadeREST.find(entity.getIdExternoConta());
         if (conta == null) {
-            throw new ContaNotFoundException();
+            return "server-message.insert-cartao-without-conta";
         }
         return super.create(entity);
     }
