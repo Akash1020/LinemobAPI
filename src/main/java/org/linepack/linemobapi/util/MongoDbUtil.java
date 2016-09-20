@@ -8,6 +8,7 @@ package org.linepack.linemobapi.util;
 import com.google.gson.Gson;
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -35,11 +36,15 @@ public class MongoDbUtil<T> {
         this.dbName = dbName;
         this.entityClass = entityClass;
     }
-
-    public MongoDatabase getMongoDatabase() throws UnknownHostException {
-        MongoClient mongoClient = new MongoClient();
-        MongoDatabase db;
-        db = mongoClient.getDatabase(dbName);
+    
+    public MongoClient getMongoClient(){
+        MongoClientURI mongoClientURI = new MongoClientURI("mongodb://root:F110987*@104.197.224.127:27017/");        
+        MongoClient mongoClient = new MongoClient(mongoClientURI);
+        return mongoClient;
+    }
+    
+    public MongoDatabase getMongoDatabase() throws UnknownHostException {                         
+        MongoDatabase db = this.getMongoClient().getDatabase(dbName);
         return db;
     }
 

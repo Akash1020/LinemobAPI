@@ -74,7 +74,8 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
     }
     
     private String createMongoDatabase(String usuario, String token) {
-        MongoClient mongoClient = new MongoClient();
+        MongoDbUtil mongoDbUtil = new MongoDbUtil(usuario, Usuario.class);
+        MongoClient mongoClient = mongoDbUtil.getMongoClient();
         List<String> dbList = mongoClient.getDatabaseNames();
         Boolean existDB = dbList.contains(usuario);
         
