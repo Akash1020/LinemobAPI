@@ -5,14 +5,12 @@
  */
 package org.linepack.linemobapi.service;
 
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,15 +49,16 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
             }
         } else {
             try {
-                this.validaToken(usuario, token);
+                this.validaToken(usuario, token, requestContext);
             } catch (IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(ContainerRequestFilterImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
     
-    private void validaToken(String nomeUsuario, String token) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    private void validaToken(String nomeUsuario, String token, ContainerRequestContext requestContext) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         if (nomeUsuario == null || token == null) {
+            System.out.println("errEntity: "+ requestContext.getUriInfo().getPath());            
             throw new HeadlessException();
         }
         

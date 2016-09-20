@@ -16,12 +16,12 @@ public class Conta extends BaseModel {
 
     private String nome;
     private String dataFundacao;
-    private Integer valorSaldoInicial;
+    private Double valorSaldoInicial;
 
     public Conta() {
     }
 
-    public Conta(String nome, String dataFundacao, Integer valorSaldoInicial) {
+    public Conta(String nome, String dataFundacao, Double valorSaldoInicial) {
         this.nome = nome;
         this.dataFundacao = dataFundacao;
         this.valorSaldoInicial = valorSaldoInicial;
@@ -43,11 +43,11 @@ public class Conta extends BaseModel {
         this.nome = nome;
     }
 
-    public Integer getValorSaldoInicial() {
+    public Double getValorSaldoInicial() {
         return valorSaldoInicial;
     }
 
-    public void setValorSaldoInicial(Integer valorSaldoInicial) {
+    public void setValorSaldoInicial(Double valorSaldoInicial) {
         this.valorSaldoInicial = valorSaldoInicial;
     }
 

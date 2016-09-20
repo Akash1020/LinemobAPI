@@ -16,7 +16,7 @@ public class Movimento extends BaseModel {
 
     private String dataLancamento;
     private String dataVencimento;
-    private Integer valor;
+    private Double valor;
     private Character natureza;
     private String descricao;
     private String idExternoCartao;
@@ -27,7 +27,7 @@ public class Movimento extends BaseModel {
     public Movimento() {
     }
 
-    public Movimento(String dataLancamento, String dataVencimento, Integer valor, Character natureza, String descricao, String idExternoCartao, String idExternoCategoria, String idExternoConta, String idExternoPessoa) {
+    public Movimento(String dataLancamento, String dataVencimento, Double valor, Character natureza, String descricao, String idExternoCartao, String idExternoCategoria, String idExternoConta, String idExternoPessoa) {
         this.dataLancamento = dataLancamento;
         this.dataVencimento = dataVencimento;
         this.valor = valor;
@@ -55,11 +55,11 @@ public class Movimento extends BaseModel {
         this.dataVencimento = dataVencimento;
     }
 
-    public Integer getValor() {
+    public Double getValor() {
         return valor;
     }
 
-    public void setValor(Integer valor) {
+    public void setValor(Double valor) {
         this.valor = valor;
     }
 
