@@ -31,21 +31,26 @@ public class MongoDbUtil<T> {
 
     private final String dbName;
     private final Class<T> entityClass;
+    private MongoClient mongoClient;
 
     public MongoDbUtil(String dbName, Class<T> entityClass) {
         this.dbName = dbName;
-        this.entityClass = entityClass;
+        this.entityClass = entityClass;        
     }
-    
-    public MongoClient getMongoClient(){
-        MongoClientURI mongoClientURI = new MongoClientURI("mongodb://root:F110987*@104.197.224.127:27017/");        
-        MongoClient mongoClient = new MongoClient(mongoClientURI);
+
+    public MongoClient getMongoClient() {
+        MongoClientURI mongoClientURI = new MongoClientURI("");
+        mongoClient = new MongoClient(mongoClientURI);
         return mongoClient;
     }
-    
-    public MongoDatabase getMongoDatabase() throws UnknownHostException {                         
+
+    public MongoDatabase getMongoDatabase() throws UnknownHostException {
         MongoDatabase db = this.getMongoClient().getDatabase(dbName);
         return db;
+    }
+
+    public void closeMongoConnection() {
+        this.mongoClient.close();
     }
 
     public MongoCollection<Document> getMongoCollection() throws UnknownHostException {
@@ -57,7 +62,7 @@ public class MongoDbUtil<T> {
         for (Field field : entity.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             document.append(field.getName(), field.get(entity));
-        }
+        }        
         return document;
     }
 

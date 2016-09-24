@@ -44,6 +44,7 @@ public abstract class AbstractFacade<T> {
     public String create(T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         Document document = this.getMongoDbUtil().getDocumentFromEntity(entity);
         this.getMongoDbUtil().getMongoCollection().insertOne(document);
+        this.mongoDbUtil.closeMongoConnection();
         return document.get("_id").toString();
     }
 
@@ -53,8 +54,10 @@ public abstract class AbstractFacade<T> {
                     new Document("_id", new ObjectId(String.valueOf(id))),
                     new Document(this.getMongoDbUtil().getDocumentFromEntity(entity))
             );
+            this.mongoDbUtil.closeMongoConnection();
             return String.valueOf(updateResult.getModifiedCount());
         } catch (UnknownHostException | IllegalArgumentException | IllegalAccessException ex) {
+            this.mongoDbUtil.closeMongoConnection();
             throw ex;
         }
     }
@@ -62,8 +65,10 @@ public abstract class AbstractFacade<T> {
     public String remove(String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         try {
             DeleteResult deleteResult = this.getMongoDbUtil().getMongoCollection().deleteOne(eq("_id", new ObjectId(id)));
+            this.mongoDbUtil.closeMongoConnection();
             return String.valueOf(deleteResult.getDeletedCount());
         } catch (Exception ex) {
+            this.mongoDbUtil.closeMongoConnection();
             throw ex;
         }
     }
@@ -79,6 +84,7 @@ public abstract class AbstractFacade<T> {
 
         List<T> list;
         list = this.getMongoDbUtil().getListFromIterable(iterable);
+        this.mongoDbUtil.closeMongoConnection();
         if (!list.isEmpty()) {
             return (T) list.get(0);
         }
@@ -87,20 +93,28 @@ public abstract class AbstractFacade<T> {
 
     public List<T> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         FindIterable iterable = this.getMongoDbUtil().getMongoCollection().find();
-        return this.getMongoDbUtil().getListFromIterable(iterable);
+        List<T> list = this.getMongoDbUtil().getListFromIterable(iterable);
+        this.mongoDbUtil.closeMongoConnection();
+        return list;
     }
 
     public List<T> findRange(Integer from, Integer to) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         FindIterable iterable = this.getMongoDbUtil().getMongoCollection().find().skip(from).limit(to);
-        return this.getMongoDbUtil().getListFromIterable(iterable);
+        List<T> list = this.getMongoDbUtil().getListFromIterable(iterable);
+        this.mongoDbUtil.closeMongoConnection();
+        return list;
     }
 
     public List<T> findByDocument(Document document) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         FindIterable iterable = this.getMongoDbUtil().getMongoCollection().find(document);
-        return this.getMongoDbUtil().getListFromIterable(iterable);
+        List<T> list = this.getMongoDbUtil().getListFromIterable(iterable);
+        this.mongoDbUtil.closeMongoConnection();
+        return list;
     }
 
     public Long count() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return this.getMongoDbUtil().getMongoCollection().count();
+        Long count = this.getMongoDbUtil().getMongoCollection().count();
+        this.mongoDbUtil.closeMongoConnection();
+        return count;
     }
 }

@@ -67,7 +67,8 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
         MongoCollection userCollection = mongoDbUtil.getMongoDatabase().getCollection(usuario.getClass().getSimpleName());
         FindIterable iterable = userCollection.find(mongoDbUtil.getDocumentFromEntity(usuario));
         List list;
-        list = mongoDbUtil.getListFromIterable(iterable);
+        list = mongoDbUtil.getListFromIterable(iterable);        
+        mongoDbUtil.closeMongoConnection();
         if (list.isEmpty()) {
             throw new ForbiddenException();
         }
@@ -80,6 +81,7 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
         Boolean existDB = dbList.contains(usuario);
         
         if (existDB) {
+            mongoDbUtil.closeMongoConnection();
             return "server-messages.user-exists";
         }
         
@@ -87,6 +89,7 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
         document.append("nome", usuario);
         document.append("password", token);
         mongoClient.getDatabase(usuario).getCollection("Usuario").insertOne(document);
+        mongoDbUtil.closeMongoConnection();
         return "";
     }
 }
