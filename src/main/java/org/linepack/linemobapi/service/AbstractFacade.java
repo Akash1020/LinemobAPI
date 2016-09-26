@@ -35,10 +35,10 @@ public abstract class AbstractFacade<T> {
     }
 
     private MongoDbUtil getMongoDbUtil() {
-        if (mongoDbUtil == null) {
-            return this.mongoDbUtil = new MongoDbUtil(headers.getHeaderString("Usuario"), entityClass);
+        if (mongoDbUtil != null && mongoDbUtil.getDbName().equals(headers.getHeaderString("Usuario"))) {
+            return this.mongoDbUtil;
         }
-        return this.mongoDbUtil;
+        return this.mongoDbUtil = new MongoDbUtil(headers.getHeaderString("Usuario"), entityClass);
     }
 
     public String create(T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {

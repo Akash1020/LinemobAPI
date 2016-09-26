@@ -35,7 +35,7 @@ public class MongoDbUtil<T> {
 
     public MongoDbUtil(String dbName, Class<T> entityClass) {
         this.dbName = dbName;
-        this.entityClass = entityClass;        
+        this.entityClass = entityClass;
     }
 
     public MongoClient getMongoClient() {
@@ -50,7 +50,9 @@ public class MongoDbUtil<T> {
     }
 
     public void closeMongoConnection() {
-        this.mongoClient.close();
+        if (this.mongoClient != null) {
+            this.mongoClient.close();
+        }
     }
 
     public MongoCollection<Document> getMongoCollection() throws UnknownHostException {
@@ -62,7 +64,7 @@ public class MongoDbUtil<T> {
         for (Field field : entity.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             document.append(field.getName(), field.get(entity));
-        }        
+        }
         return document;
     }
 
@@ -90,4 +92,9 @@ public class MongoDbUtil<T> {
         }
         return list;
     }
+
+    public String getDbName() {
+        return dbName;
+    }
+
 }
