@@ -68,10 +68,13 @@ public class PessoaFacadeREST extends AbstractFacade<Pessoa> {
     }
 
     @GET
+    @Path("{versao}/{filtraVersao}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Override
-    public List<Pessoa> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.findAll();
+    public List<Pessoa> findAll(
+            @PathParam("versao") String versao,
+            @PathParam("filtraVersao") String filtraVersao) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.findAll(versao, filtraVersao);
     }
 
     @GET

@@ -7,6 +7,7 @@ package org.linepack.linemobapi.service;
 
 import com.mongodb.client.FindIterable;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gt;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import java.net.UnknownHostException;
@@ -91,8 +92,13 @@ public abstract class AbstractFacade<T> {
         return null;
     }
 
-    public List<T> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        FindIterable iterable = this.getMongoDbUtil().getMongoCollection().find();
+    public List<T> findAll(String versao, String filtraVersao) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        FindIterable iterable = null;
+        if (filtraVersao.equals("1")) {
+            iterable = this.getMongoDbUtil().getMongoCollection().find(gt("versao", versao));
+        } else {
+            iterable = this.getMongoDbUtil().getMongoCollection().find();
+        }
         List<T> list = this.getMongoDbUtil().getListFromIterable(iterable);
         this.mongoDbUtil.closeMongoConnection();
         return list;

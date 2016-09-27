@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.Document;
@@ -39,7 +40,7 @@ public class MongoDbUtil<T> {
     }
 
     public MongoClient getMongoClient() {
-        MongoClientURI mongoClientURI = new MongoClientURI("");
+        MongoClientURI mongoClientURI = new MongoClientURI("mongodb://localhost:27017");
         mongoClient = new MongoClient(mongoClientURI);
         return mongoClient;
     }
@@ -61,9 +62,28 @@ public class MongoDbUtil<T> {
 
     public Document getDocumentFromEntity(T entity) throws IllegalArgumentException, IllegalAccessException {
         Document document = new Document();
-        for (Field field : entity.getClass().getDeclaredFields()) {
+        document.putAll(this.getDocument(entity.getClass().getDeclaredFields(), entity));
+        document.putAll(this.getDocument(entity.getClass().getSuperclass().getDeclaredFields(), entity));
+        return document;
+    }
+
+    private Map<String, Object> getDocument(Field[] fieldsArray, T entity) throws IllegalArgumentException, IllegalAccessException {
+        Document document = new Document();
+        for (Field field : fieldsArray) {
             field.setAccessible(true);
-            document.append(field.getName(), field.get(entity));
+            Object fieldValue = "";
+            if (field.getName() == "versao") {
+                if (field.get(entity) == null) {
+                    fieldValue = "1";
+                } else {
+                    fieldValue = String.valueOf(Integer.parseInt((String) field.get(entity)) + 1);
+                }
+            } else {
+                fieldValue = field.get(entity);
+            }
+            if (field.getName() != "id") {
+                document.append(field.getName(), fieldValue);
+            }
         }
         return document;
     }
@@ -82,8 +102,10 @@ public class MongoDbUtil<T> {
                         idField.setAccessible(true);
                         idField.set(object, objId.toString());
                         list.add((T) object);
+
                     } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-                        Logger.getLogger(AbstractFacade.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AbstractFacade.class
+                                .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });

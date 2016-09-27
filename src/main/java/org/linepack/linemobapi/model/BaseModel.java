@@ -6,7 +6,6 @@
 package org.linepack.linemobapi.model;
 
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -15,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class BaseModel {
 
     private String id;
+    private String versao;
 
     public String getId() {
         return id;
@@ -22,6 +22,14 @@ public class BaseModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getVersao() {
+        return versao;
+    }
+
+    public void setVersao(String versao) {
+        this.versao = versao;
     }
 
     @Override

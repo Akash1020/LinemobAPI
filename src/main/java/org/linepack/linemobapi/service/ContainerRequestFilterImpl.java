@@ -61,11 +61,13 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
             System.out.println("errEntity: "+ requestContext.getUriInfo().getPath());            
             throw new HeadlessException();
         }
-        
-        Usuario usuario = new Usuario(nomeUsuario, token);
+                
         MongoDbUtil mongoDbUtil = new MongoDbUtil(nomeUsuario, Usuario.class);
-        MongoCollection userCollection = mongoDbUtil.getMongoDatabase().getCollection(usuario.getClass().getSimpleName());
-        FindIterable iterable = userCollection.find(mongoDbUtil.getDocumentFromEntity(usuario));
+        MongoCollection userCollection = mongoDbUtil.getMongoDatabase().getCollection("Usuario");
+        Document document = new Document();
+        document.append("nome", nomeUsuario);
+        document.append("password", token);
+        FindIterable iterable = userCollection.find(document);
         List list;
         list = mongoDbUtil.getListFromIterable(iterable);        
         mongoDbUtil.closeMongoConnection();

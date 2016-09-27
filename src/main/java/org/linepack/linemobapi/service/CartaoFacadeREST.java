@@ -33,7 +33,7 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
 
     @EJB
     private ContaFacadeREST contaFacadeREST;
-    @EJB 
+    @EJB
     private MovimentoFacadeREST movimentoFacadeREST;
 
     public CartaoFacadeREST() {
@@ -59,7 +59,7 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
     public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         Document document = new Document("idExternoCartao", id);
         List<Movimento> movimentoList = movimentoFacadeREST.findByDocument(document);
-        if (!movimentoList.isEmpty()){
+        if (!movimentoList.isEmpty()) {
             return "server-messages.remove-cartao-used-movimento";
         }
         return super.remove(id);
@@ -75,10 +75,13 @@ public class CartaoFacadeREST extends AbstractFacade<Cartao> {
     }
 
     @GET
-    @Override
+    @Path("{versao}/{filtraVersao}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Cartao> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.findAll();
+    @Override
+    public List<Cartao> findAll(
+            @PathParam("versao") String versao,
+            @PathParam("filtraVersao") String filtraVersao) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.findAll(versao, filtraVersao);
     }
 
     @GET

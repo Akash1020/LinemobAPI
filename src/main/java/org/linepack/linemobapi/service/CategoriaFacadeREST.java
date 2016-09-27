@@ -28,15 +28,15 @@ import org.linepack.linemobapi.model.Movimento;
  */
 @Stateless
 @Path("categoria")
-public class CategoriaFacadeREST extends AbstractFacade<Categoria>{
-    
+public class CategoriaFacadeREST extends AbstractFacade<Categoria> {
+
     @EJB
     private MovimentoFacadeREST movimentoFacadeREST;
-    
+
     public CategoriaFacadeREST() {
         super(Categoria.class);
     }
-    
+
     @POST
     @Override
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -52,7 +52,7 @@ public class CategoriaFacadeREST extends AbstractFacade<Categoria>{
     public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         Document document = new Document("idExternoCategoria", id);
         List<Movimento> movimentoList = movimentoFacadeREST.findByDocument(document);
-        if (!movimentoList.isEmpty()){
+        if (!movimentoList.isEmpty()) {
             return "server-messages.remove-categoria-used-movimento";
         }
         return super.remove(id);
@@ -68,12 +68,15 @@ public class CategoriaFacadeREST extends AbstractFacade<Categoria>{
     }
 
     @GET
+    @Path("{versao}/{filtraVersao}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Override
-    public List<Categoria> findAll() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.findAll();
+    public List<Categoria> findAll(
+            @PathParam("versao") String versao,
+            @PathParam("filtraVersao") String filtraVersao) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.findAll(versao, filtraVersao);
     }
-    
+
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -81,6 +84,5 @@ public class CategoriaFacadeREST extends AbstractFacade<Categoria>{
     public Categoria find(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.find(id);
     }
-    
-    
+
 }
