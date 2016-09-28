@@ -72,8 +72,8 @@ public class MongoDbUtil<T> {
         for (Field field : fieldsArray) {
             field.setAccessible(true);
             Object fieldValue = "";
-            if (field.getName() == "versao") {
-                if (field.get(entity) == null) {
+            if (field.getName().equals("versao")) {
+                if (field.get(entity) == "") {
                     fieldValue = "1";
                 } else {
                     fieldValue = String.valueOf(Integer.parseInt((String) field.get(entity)) + 1);
@@ -81,7 +81,7 @@ public class MongoDbUtil<T> {
             } else {
                 fieldValue = field.get(entity);
             }
-            if (field.getName() != "id") {
+            if (!field.getName().equals("id")) {
                 document.append(field.getName(), fieldValue);
             }
         }
