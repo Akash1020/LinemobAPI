@@ -6,9 +6,8 @@
 package org.linepack.linemobapi.service;
 
 import com.mongodb.client.FindIterable;
-import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gt;
-import com.mongodb.client.result.DeleteResult;
+import static com.mongodb.client.model.Filters.lt;
 import com.mongodb.client.result.UpdateResult;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -63,12 +62,17 @@ public abstract class AbstractFacade<T> {
         }
     }
 
-    public String remove(String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    public String remove(String id, T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         try {
-            DeleteResult deleteResult = this.getMongoDbUtil().getMongoCollection().deleteOne(eq("_id", new ObjectId(id)));
+            Document document = this.getMongoDbUtil().getDocumentFromEntity(entity);
+            document.replace("versao", Integer.parseInt((String) document.get("versao")) - 1);
+            UpdateResult updateResult = this.getMongoDbUtil().getMongoCollection().replaceOne(
+                    new Document("_id", new ObjectId(String.valueOf(id))),
+                    document
+            );
             this.mongoDbUtil.closeMongoConnection();
-            return String.valueOf(deleteResult.getDeletedCount());
-        } catch (Exception ex) {
+            return String.valueOf(updateResult.getModifiedCount());
+        } catch (IllegalArgumentException | IllegalAccessException | UnknownHostException ex) {
             this.mongoDbUtil.closeMongoConnection();
             throw ex;
         }
@@ -92,10 +96,14 @@ public abstract class AbstractFacade<T> {
         return null;
     }
 
-    public List<T> findAll(String versao, String filtraVersao) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    public List<T> findAll(String versao, String filtraVersao, String menorQue) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         FindIterable iterable = null;
         if (filtraVersao.equals("1")) {
-            iterable = this.getMongoDbUtil().getMongoCollection().find(gt("versao", versao));
+            if (menorQue.equals("1")) {
+                iterable = this.getMongoDbUtil().getMongoCollection().find(new Document("versao", new Document("$lt", versao)));
+            } else {
+                iterable = this.getMongoDbUtil().getMongoCollection().find(gt("versao", versao));
+            }
         } else {
             iterable = this.getMongoDbUtil().getMongoCollection().find();
         }

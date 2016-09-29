@@ -45,17 +45,18 @@ public class CategoriaFacadeREST extends AbstractFacade<Categoria> {
         return super.create(entity);
     }
 
-    @DELETE
-    @Path("{id}")
+    @PUT
+    @Path("{id}/del")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
     @Override
-    public String remove(@PathParam("id") String id) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    public String remove(@PathParam("id") String id, Categoria entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         Document document = new Document("idExternoCategoria", id);
         List<Movimento> movimentoList = movimentoFacadeREST.findByDocument(document);
         if (!movimentoList.isEmpty()) {
             return "server-messages.remove-categoria-used-movimento";
         }
-        return super.remove(id);
+        return super.remove(id, entity);
     }
 
     @PUT
@@ -68,13 +69,14 @@ public class CategoriaFacadeREST extends AbstractFacade<Categoria> {
     }
 
     @GET
-    @Path("{versao}/{filtraVersao}")
+    @Path("{versao}/{filtraVersao}/{menorQue}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Override
     public List<Categoria> findAll(
             @PathParam("versao") String versao,
-            @PathParam("filtraVersao") String filtraVersao) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        return super.findAll(versao, filtraVersao);
+            @PathParam("filtraVersao") String filtraVersao,
+            @PathParam("menorQue") String menorQue) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        return super.findAll(versao, filtraVersao, menorQue);
     }
 
     @GET
