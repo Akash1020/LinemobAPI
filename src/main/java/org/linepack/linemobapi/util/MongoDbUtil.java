@@ -74,9 +74,9 @@ public class MongoDbUtil<T> {
             Object fieldValue = "";
             if (field.getName().equals("versao")) {
                 if (field.get(entity) == "") {
-                    fieldValue = "1";
+                    fieldValue = 1;
                 } else {
-                    fieldValue = String.valueOf(Integer.parseInt((String) field.get(entity)) + 1);
+                    fieldValue = (Integer) field.get(entity) + 1;
                 }
             } else {
                 fieldValue = field.get(entity);

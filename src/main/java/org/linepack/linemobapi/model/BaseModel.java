@@ -14,7 +14,7 @@ import java.util.Objects;
 public class BaseModel {
 
     private String id;
-    private String versao;
+    private Integer versao;
 
     public String getId() {
         return id;
@@ -24,11 +24,11 @@ public class BaseModel {
         this.id = id;
     }
 
-    public String getVersao() {
+    public Integer getVersao() {
         return versao;
     }
 
-    public void setVersao(String versao) {
+    public void setVersao(Integer versao) {
         this.versao = versao;
     }
 

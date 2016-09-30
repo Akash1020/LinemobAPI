@@ -65,7 +65,7 @@ public abstract class AbstractFacade<T> {
     public String remove(String id, T entity) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         try {
             Document document = this.getMongoDbUtil().getDocumentFromEntity(entity);
-            document.replace("versao", Integer.parseInt((String) document.get("versao")) - 1);
+            document.replace("versao", (Integer) document.get("versao") - 1);
             UpdateResult updateResult = this.getMongoDbUtil().getMongoCollection().replaceOne(
                     new Document("_id", new ObjectId(String.valueOf(id))),
                     document
@@ -96,11 +96,11 @@ public abstract class AbstractFacade<T> {
         return null;
     }
 
-    public List<T> findAll(String versao, String filtraVersao, String menorQue) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    public List<T> findAll(Integer versao, String filtraVersao, String menorQue) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         FindIterable iterable = null;
         if (filtraVersao.equals("1")) {
             if (menorQue.equals("1")) {
-                iterable = this.getMongoDbUtil().getMongoCollection().find(new Document("versao", new Document("$lt", versao)));
+                iterable = this.getMongoDbUtil().getMongoCollection().find(lt("versao", versao));
             } else {
                 iterable = this.getMongoDbUtil().getMongoCollection().find(gt("versao", versao));
             }

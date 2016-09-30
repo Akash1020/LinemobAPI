@@ -94,7 +94,7 @@ public class MovimentoFacadeREST extends AbstractFacade<Movimento> {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Override
     public List<Movimento> findAll(
-            @PathParam("versao") String versao,
+            @PathParam("versao") Integer versao,
             @PathParam("filtraVersao") String filtraVersao,
             @PathParam("menorQue") String menorQue) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         return super.findAll(versao, filtraVersao, menorQue);
