@@ -23,6 +23,7 @@ public class Movimento extends BaseModel {
     private String idExternoCategoria;
     private String idExternoConta;
     private String idExternoPessoa;
+    private String isTransferencia;
 
     public Movimento() {
     }
@@ -111,4 +112,11 @@ public class Movimento extends BaseModel {
         this.idExternoPessoa = idExternoPessoa;
     }
 
+    public String getIsTransferencia() {
+        return isTransferencia;
+    }
+
+    public void setIsTransferencia(String isTransferencia) {
+        this.isTransferencia = isTransferencia;
+    }
 }
