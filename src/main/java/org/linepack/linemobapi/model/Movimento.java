@@ -28,7 +28,7 @@ public class Movimento extends BaseModel {
     public Movimento() {
     }
 
-    public Movimento(String dataLancamento, String dataVencimento, Double valor, Character natureza, String descricao, String idExternoCartao, String idExternoCategoria, String idExternoConta, String idExternoPessoa) {
+    public Movimento(String dataLancamento, String dataVencimento, Double valor, Character natureza, String descricao, String idExternoCartao, String idExternoCategoria, String idExternoConta, String idExternoPessoa, String isTransferencia) {
         this.dataLancamento = dataLancamento;
         this.dataVencimento = dataVencimento;
         this.valor = valor;
@@ -38,6 +38,7 @@ public class Movimento extends BaseModel {
         this.idExternoCategoria = idExternoCategoria;
         this.idExternoConta = idExternoConta;
         this.idExternoPessoa = idExternoPessoa;
+        this.isTransferencia = isTransferencia;
     }
 
     public String getDataLancamento() {
