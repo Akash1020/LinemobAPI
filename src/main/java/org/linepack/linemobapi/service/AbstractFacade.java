@@ -28,7 +28,7 @@ public abstract class AbstractFacade<T> {
     private MongoDbUtil mongoDbUtil;
 
     @Context
-    private HttpHeaders headers;
+    HttpHeaders headers;
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;

@@ -6,12 +6,15 @@
 package org.linepack.linemobapi.service;
 
 import java.net.UnknownHostException;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.bson.Document;
 import org.linepack.linemobapi.model.Usuario;
 
 /**
@@ -30,11 +33,15 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     @Path("/login")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
-    public Boolean login() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        //return super.validaToken();
-        return true;
+    public String login() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        Document document = new Document("nome", this.headers.getHeaderString("Usuario"));
+        List<Usuario> usuarios = this.findByDocument(document);
+        if (!usuarios.isEmpty()) {
+            return usuarios.get(0).getNomeNovo();
+        }
+        return "";
     }
-    
+
     @GET
     @Path("/signup")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

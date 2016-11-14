@@ -24,7 +24,13 @@
             <groupId>org.mongodb</groupId>
             <artifactId>bson</artifactId>
             <version>3.3.0</version>
-        </dependency>        
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>

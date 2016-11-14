@@ -10,10 +10,12 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import java.awt.HeadlessException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -21,6 +23,7 @@ import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import org.bson.Document;
+import org.linepack.linemobapi.mail.EmailController;
 import org.linepack.linemobapi.model.Usuario;
 import org.linepack.linemobapi.util.MongoDbUtil;
 
@@ -31,21 +34,27 @@ import org.linepack.linemobapi.util.MongoDbUtil;
 @Provider
 @PreMatching
 public class ContainerRequestFilterImpl implements ContainerRequestFilter {
-    
+
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException, UnknownHostException {
+    public void filter(ContainerRequestContext requestContext) throws IOException, UnknownHostException, UnsupportedEncodingException {
         if (requestContext.getRequest().getMethod().equals("OPTIONS")) {
             requestContext.abortWith(Response.status(Response.Status.OK).build());
             return;
         }
         
-        String usuario = requestContext.getHeaderString("Usuario");
+        String usuario = requestContext.getHeaderString("Usuario");        
+        String nome = requestContext.getHeaderString("Nome");
         String token = requestContext.getHeaderString("Token");
-        
+
         if (requestContext.getUriInfo().getPath().equals("/usuario/signup")) {
-            String retornoCriacaoDB = this.createMongoDatabase(usuario, token);
-            if (retornoCriacaoDB != ""){
-                throw new ForbiddenException();
+            String retornoCriacaoDB;
+            try {
+                retornoCriacaoDB = this.createMongoDatabase(usuario, token, nome);
+                if (retornoCriacaoDB != "") {
+                    throw new ForbiddenException();
+                }
+            } catch (MessagingException ex) {
+                Logger.getLogger(ContainerRequestFilterImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             try {
@@ -55,13 +64,13 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
             }
         }
     }
-    
+
     private void validaToken(String nomeUsuario, String token, ContainerRequestContext requestContext) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
         if (nomeUsuario == null || token == null) {
-            System.out.println("errEntity: "+ requestContext.getUriInfo().getPath());            
+            System.out.println("errEntity: " + requestContext.getUriInfo().getPath());
             throw new HeadlessException();
         }
-                
+
         MongoDbUtil mongoDbUtil = new MongoDbUtil(nomeUsuario, Usuario.class);
         MongoCollection userCollection = mongoDbUtil.getMongoDatabase().getCollection("Usuario");
         Document document = new Document();
@@ -69,29 +78,33 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
         document.append("password", token);
         FindIterable iterable = userCollection.find(document);
         List list;
-        list = mongoDbUtil.getListFromIterable(iterable);        
+        list = mongoDbUtil.getListFromIterable(iterable);
         mongoDbUtil.closeMongoConnection();
         if (list.isEmpty()) {
             throw new ForbiddenException();
         }
     }
-    
-    private String createMongoDatabase(String usuario, String token) {
+
+    private String createMongoDatabase(String usuario, String token, String nome) throws MessagingException, UnsupportedEncodingException {
         MongoDbUtil mongoDbUtil = new MongoDbUtil(usuario, Usuario.class);
         MongoClient mongoClient = mongoDbUtil.getMongoClient();
         List<String> dbList = mongoClient.getDatabaseNames();
         Boolean existDB = dbList.contains(usuario);
-        
+
         if (existDB) {
             mongoDbUtil.closeMongoConnection();
             return "server-messages.user-exists";
         }
+
+        EmailController emailController = new EmailController();
+        emailController.bemVindo(usuario, nome);
         
         Document document = new Document();
         document.append("nome", usuario);
         document.append("password", token);
+        document.append("nomeNovo", nome);
         mongoClient.getDatabase(usuario).getCollection("Usuario").insertOne(document);
-        mongoDbUtil.closeMongoConnection();
+        mongoDbUtil.closeMongoConnection();       
         return "";
     }
 }

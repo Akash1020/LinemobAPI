@@ -16,13 +16,15 @@ public class Usuario extends BaseModel {
 
     private String nome;
     private String password;
+    private String nomeNovo;
 
     public Usuario() {
     }
 
-    public Usuario(String nome, String password) {
+    public Usuario(String nome, String password, String nomeNovo) {
         this.nome = nome;
         this.password = password;
+        this.nomeNovo = nomeNovo;
     }
 
     public String getNome() {
@@ -39,6 +41,14 @@ public class Usuario extends BaseModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getNomeNovo() {
+        return nomeNovo;
+    }
+
+    public void setNomeNovo(String nomeNovo) {
+        this.nomeNovo = nomeNovo;
     }
 
 }
