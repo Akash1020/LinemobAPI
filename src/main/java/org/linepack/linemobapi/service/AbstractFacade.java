@@ -131,4 +131,13 @@ public abstract class AbstractFacade<T> {
         this.mongoDbUtil.closeMongoConnection();
         return count;
     }
+
+    public String renameDatabase(String newDB) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+        List list = this.findByDocument(new Document("nome", newDB));
+        if (list.isEmpty()) {
+            this.mongoDbUtil.renameMongoDatabase(newDB);
+            return "";
+        }
+        return "server-messages.user-exists";
+    }
 }

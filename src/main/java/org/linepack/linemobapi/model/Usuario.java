@@ -20,7 +20,7 @@ public class Usuario extends BaseModel {
 
     public Usuario() {
     }
-
+    
     public Usuario(String nome, String password, String nomeNovo) {
         this.nome = nome;
         this.password = password;

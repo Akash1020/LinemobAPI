@@ -6,7 +6,9 @@
 package org.linepack.linemobapi.util;
 
 import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.linepack.linemobapi.service.AbstractFacade;
 
@@ -54,6 +57,12 @@ public class MongoDbUtil<T> {
         if (this.mongoClient != null) {
             this.mongoClient.close();
         }
+    }
+
+    public void renameMongoDatabase(String newDB) throws UnknownHostException {
+        Bson cmdObj = new BasicDBObject("copydb", "1").append("fromdb", this.dbName).append("todb", newDB); 
+        this.getMongoDatabase().runCommand(cmdObj);
+        this.getMongoDatabase().drop();
     }
 
     public MongoCollection<Document> getMongoCollection() throws UnknownHostException {

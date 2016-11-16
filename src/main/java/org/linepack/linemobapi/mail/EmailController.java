@@ -32,7 +32,7 @@ public class EmailController {
     public void bemVindo(String to, String usuario) throws MessagingException, UnsupportedEncodingException {
         Email email = new Email();
         email.setFrom("linepack@linepack.org");
-        email.setPassword("");
+        email.setPassword("")
         email.setTo(to.replace(',', '.'));
         email.setCco("linepack@linepack.org");
         email.setSubject("Bem Vindo ao Linemob Finanças");
