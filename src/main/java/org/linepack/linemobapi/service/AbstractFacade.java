@@ -9,12 +9,16 @@ import com.mongodb.client.FindIterable;
 import static com.mongodb.client.model.Filters.gt;
 import static com.mongodb.client.model.Filters.lt;
 import com.mongodb.client.result.UpdateResult;
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.List;
+import javax.mail.MessagingException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.linepack.linemobapi.mail.EmailController;
+import org.linepack.linemobapi.model.Usuario;
 import org.linepack.linemobapi.util.MongoDbUtil;
 
 /**
@@ -132,10 +136,19 @@ public abstract class AbstractFacade<T> {
         return count;
     }
 
-    public String renameDatabase(String newDB) throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
+    public String renameDatabase(String newDB, String idForUpdate, Usuario usuario) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, MessagingException, UnsupportedEncodingException {
         List list = this.findByDocument(new Document("nome", newDB));
         if (list.isEmpty()) {
-            this.mongoDbUtil.renameMongoDatabase(newDB);
+            this.getMongoDbUtil().renameMongoDatabase(newDB);            
+            MongoDbUtil newMongoDbUtil = new MongoDbUtil(newDB, entityClass);
+            newMongoDbUtil.getMongoCollection().replaceOne(
+                    new Document("_id", new ObjectId(String.valueOf(idForUpdate))),
+                    new Document(newMongoDbUtil.getDocumentFromEntity(usuario))
+            );
+            newMongoDbUtil.closeMongoConnection();
+            this.mongoDbUtil.closeMongoConnection();
+            EmailController emailController = new EmailController();
+            emailController.alteracaoDadosCadastrais(newDB, usuario.getNomeNovo());
             return "";
         }
         return "server-messages.user-exists";

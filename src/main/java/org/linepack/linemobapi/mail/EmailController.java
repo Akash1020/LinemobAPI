@@ -29,15 +29,35 @@ import javax.mail.internet.MimeMultipart;
  */
 public class EmailController {
 
+    private final String from = "linepack@linepack.org";
+    private final String password = ""
+
+    public EmailController() {
+    }
+
     public void bemVindo(String to, String usuario) throws MessagingException, UnsupportedEncodingException {
         Email email = new Email();
-        email.setFrom("linepack@linepack.org");
-        email.setPassword("")
+        email.setFrom(this.from);
+        email.setPassword(this.password);
         email.setTo(to.replace(',', '.'));
         email.setCco("linepack@linepack.org");
-        email.setSubject("Bem Vindo ao Linemob Finanças");
+        email.setSubject("[Linemob] Bem Vindo " + usuario);
         String body = "<html> <head> <title>Boas Vindas</title> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> </head> <body> <div> <center> <img src=\"https://avatars2.githubusercontent.com/u/19695477?v=3&s=200\" width=\"100px\"> </center> <p>Olá <Strong>{{Usuario}}</strong>.</p><p>Seja muito bem vindo ao <strong>Linemob Finanças</strong>.</p><p>Se você tiver alguma dúvida quanto ao uso do App, ou sugestões de melhoria, entre em contato pelo e-mail: <strong>android-support@linepack.org</strong>, ou pelo telefone: <strong>+55(44)99865-9032</strong> </p><p>Atenciosamente,<br><i>Linepack Systems / Leandro Franciscato</i></p></div></body></html>";
         body = body.replace("{{Usuario}}", usuario);
+        email.setBody(body);
+        this.envia(email);
+    }
+
+    public void alteracaoDadosCadastrais(String to, String usuario) throws MessagingException, UnsupportedEncodingException {
+        Email email = new Email();
+        email.setFrom(this.from);
+        email.setPassword(this.password);
+        email.setTo(to.replace(',', '.'));
+        email.setCco("linepack@linepack.org");
+        email.setSubject("[Linemob] Alteração de dados cadastrais");
+        String body = "<html> <head> <title>Alteração de dados cadastrais</title> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> </head> <body> <div> <center> <img src=\"https:/avatars2.githubusercontent.com/u/19695477?v=3&s=200\" width=\"100px\"> </center> <p>Olá <Strong>{{Usuario}}</strong>.</p><p>Seus dados cadastrais foram alterados conforme abaixo:<br><p><strong>Nome: </strong>{{Usuario}}.<br><strong>E-mail: </strong>{{Email}}. </p><p>Se não foi você quem realizou estas alterações, entre em contato pelo telefone <strong>+55(44)99865-9032</strong> ou pelo E-mail: <strong>android-support@linepack.org</strong></p><p>Atenciosamente,<br><i>Linepack Systems / Leandro Franciscato</i></p></div></body></html>";
+        body = body.replace("{{Usuario}}", usuario);
+        body = body.replace("{{Email}}", to.replace(',', '.'));
         email.setBody(body);
         this.envia(email);
     }

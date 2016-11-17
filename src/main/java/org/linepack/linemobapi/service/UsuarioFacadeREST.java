@@ -5,9 +5,11 @@
  */
 package org.linepack.linemobapi.service;
 
+import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.mail.MessagingException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
@@ -35,8 +37,8 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
     public String login() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        Document document = new Document("nome", this.headers.getHeaderString("Usuario"));
-        List<Usuario> usuarios = this.findByDocument(document);
+        Document document = new Document("nome", super.headers.getHeaderString("Usuario"));
+        List<Usuario> usuarios = super.findByDocument(document);
         if (!usuarios.isEmpty()) {
             return usuarios.get(0).getNomeNovo();
         }
@@ -56,15 +58,15 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     @Path("/alteracaoDadosCadastrais")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
-    public String alteracaoDadosCadastrais(Usuario usuario) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException {
-        Document document = new Document("nome", this.headers.getHeaderString("Usuario"));
-        List<Usuario> usuarios = this.findByDocument(document);
+    public String alteracaoDadosCadastrais(Usuario usuario) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, MessagingException, UnsupportedEncodingException {
+        Document document = new Document("nome", super.headers.getHeaderString("Usuario"));
+        List<Usuario> usuarios = super.findByDocument(document);
+        String idForUpdate = "";
         if (!usuarios.isEmpty()) {
-            String id =  usuarios.get(0).getId();
-            this.edit(id, usuario);
+            idForUpdate = usuarios.get(0).getId();
         } else {
             throw new ForbiddenException();
-        }        
-        return this.renameDatabase(usuario.getNome());        
+        }
+        return super.renameDatabase(usuario.getNome(), idForUpdate, usuario);
     }
 }

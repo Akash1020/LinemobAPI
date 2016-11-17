@@ -33,7 +33,7 @@ import org.linepack.linemobapi.service.AbstractFacade;
  */
 public class MongoDbUtil<T> {
 
-    private final String dbName;
+    private String dbName;
     private final Class<T> entityClass;
     private MongoClient mongoClient;
 
@@ -60,9 +60,10 @@ public class MongoDbUtil<T> {
     }
 
     public void renameMongoDatabase(String newDB) throws UnknownHostException {
-        Bson cmdObj = new BasicDBObject("copydb", "1").append("fromdb", this.dbName).append("todb", newDB); 
-        this.getMongoDatabase().runCommand(cmdObj);
-        this.getMongoDatabase().drop();
+        MongoDatabase db = this.getMongoClient().getDatabase("admin");
+        Bson cmdObj = new BasicDBObject("copydb", "1").append("fromdb", this.dbName).append("todb", newDB);
+        db.runCommand(cmdObj);
+        this.getMongoDatabase().drop();        
     }
 
     public MongoCollection<Document> getMongoCollection() throws UnknownHostException {
