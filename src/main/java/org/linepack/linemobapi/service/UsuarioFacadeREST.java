@@ -18,6 +18,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.bson.Document;
+import org.linepack.linemobapi.mail.EmailController;
 import org.linepack.linemobapi.model.Usuario;
 
 /**
@@ -68,5 +69,23 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
             throw new ForbiddenException();
         }
         return super.renameDatabase(usuario.getNome(), idForUpdate, usuario);
+    }
+
+    @POST
+    @Path("/alteracaoSenha")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces(MediaType.TEXT_PLAIN)
+    public String alteracaoSenha(Usuario usuario) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, MessagingException, UnsupportedEncodingException {
+        Document document = new Document("nome", super.headers.getHeaderString("Usuario"));
+        List<Usuario> usuarios = super.findByDocument(document);
+        if (!usuarios.isEmpty()) {
+            String idForUpdate = usuarios.get(0).getId();
+            String updateResult = super.edit(idForUpdate, usuario);
+            EmailController emailController = new EmailController();
+            emailController.alteracaoSenha(usuario.getNome(), usuario.getNomeNovo());
+            return updateResult;
+        } else {
+            throw new ForbiddenException();
+        }
     }
 }
