@@ -95,16 +95,16 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
             mongoDbUtil.closeMongoConnection();
             return "server-messages.user-exists";
         }
-
-        EmailController emailController = new EmailController();
-        emailController.bemVindo(usuario, nome);
-        
+               
         Document document = new Document();
         document.append("nome", usuario);
         document.append("password", token);
         document.append("nomeNovo", nome);
         mongoClient.getDatabase(usuario).getCollection("Usuario").insertOne(document);
         mongoDbUtil.closeMongoConnection();       
+        
+        EmailController emailController = new EmailController();
+        emailController.bemVindo(usuario, nome);
         return "";
     }
 }
