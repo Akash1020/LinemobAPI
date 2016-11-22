@@ -45,7 +45,8 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
         String usuario = requestContext.getHeaderString("Usuario");
         String token = requestContext.getHeaderString("Token");
 
-        if (!requestContext.getUriInfo().getPath().equals("/usuario/signup")) {
+        if (!requestContext.getUriInfo().getPath().equals("/usuario/signup")
+                && !requestContext.getUriInfo().getPath().equals("/usuario/esqueciMinhaSenha")) {
             try {
                 this.validaToken(usuario, token, requestContext);
             } catch (IllegalArgumentException | IllegalAccessException ex) {

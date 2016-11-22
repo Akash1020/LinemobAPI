@@ -43,7 +43,7 @@ public class MongoDbUtil<T> {
     }
 
     public MongoClient getMongoClient() {
-        MongoClientURI mongoClientURI = new MongoClientURI("mongodb://localhost:27017");
+        MongoClientURI mongoClientURI = new MongoClientURI("");                                                                
         mongoClient = new MongoClient(mongoClientURI);
         return mongoClient;
     }

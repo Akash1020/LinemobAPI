@@ -112,4 +112,24 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
             throw new ForbiddenException();
         }
     }
+    
+    @POST
+    @Path("/esqueciMinhaSenha")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces(MediaType.TEXT_PLAIN)
+    public String esqueciMinhaSenha(Usuario usuario) throws UnknownHostException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, MessagingException, UnsupportedEncodingException {
+        Document document = new Document("nome", usuario.getNome());
+        List<Usuario> usuarios = super.findByDocument(document);
+        if (!usuarios.isEmpty()) {
+            String idForUpdate = usuarios.get(0).getId();            
+            String senhaNova = usuario.getNomeNovo();
+            usuario.setNomeNovo(usuarios.get(0).getNomeNovo());// No futuro pode-se colcoar o Nome para validação juntamente com e-mail
+            super.edit(idForUpdate, usuario);
+            EmailController emailController = new EmailController();
+            emailController.esqueciMinhaSenha(usuario.getNome(), usuario.getNomeNovo(), senhaNova);
+            return "";
+        } else {
+            return "server-messages.user-not-exists";
+        }
+    }
 }
