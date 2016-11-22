@@ -5,6 +5,7 @@
  */
 package org.linepack.linemobapi.service;
 
+import com.mongodb.MongoClient;
 import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import org.bson.Document;
 import org.linepack.linemobapi.mail.EmailController;
 import org.linepack.linemobapi.model.Usuario;
+import org.linepack.linemobapi.util.MongoDbUtil;
 
 /**
  *
@@ -50,9 +52,31 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
     @Path("/signup")
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces(MediaType.TEXT_PLAIN)
-    public Boolean signUp() throws UnknownHostException, IllegalArgumentException, IllegalAccessException {
-        //return super.validaToken();
-        return true;
+    public String signUp() throws UnknownHostException, IllegalArgumentException, IllegalAccessException, MessagingException, UnsupportedEncodingException {
+        String usuario = super.headers.getHeaderString("Usuario");
+        String token = super.headers.getHeaderString("Token");
+        String nome = super.headers.getHeaderString("Nome");
+        
+        MongoDbUtil mongoDbUtil = new MongoDbUtil(usuario, Usuario.class);
+        MongoClient mongoClient = mongoDbUtil.getMongoClient();
+        List<String> dbList = mongoClient.getDatabaseNames();
+        Boolean existDB = dbList.contains(usuario);
+
+        if (existDB) {
+            mongoDbUtil.closeMongoConnection();
+            return "server-messages.user-exists";
+        }
+
+        Document document = new Document();
+        document.append("nome", usuario);
+        document.append("password", token);
+        document.append("nomeNovo", nome);
+        mongoClient.getDatabase(usuario).getCollection("Usuario").insertOne(document);
+        mongoDbUtil.closeMongoConnection();
+
+        EmailController emailController = new EmailController();
+        emailController.bemVindo(usuario, nome);
+        return "";
     }
 
     @POST

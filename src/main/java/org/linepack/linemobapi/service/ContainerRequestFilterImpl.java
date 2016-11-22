@@ -41,26 +41,15 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
             requestContext.abortWith(Response.status(Response.Status.OK).build());
             return;
         }
-        
-        String usuario = requestContext.getHeaderString("Usuario");        
-        String nome = requestContext.getHeaderString("Nome");
+
+        String usuario = requestContext.getHeaderString("Usuario");
         String token = requestContext.getHeaderString("Token");
 
-        if (requestContext.getUriInfo().getPath().equals("/usuario/signup")) {
-            String retornoCriacaoDB;
-            try {
-                retornoCriacaoDB = this.createMongoDatabase(usuario, token, nome);
-                if (retornoCriacaoDB != "") {
-                    throw new ForbiddenException();
-                }
-            } catch (MessagingException ex) {
-                Logger.getLogger(ContainerRequestFilterImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
+        if (!requestContext.getUriInfo().getPath().equals("/usuario/signup")) {
             try {
                 this.validaToken(usuario, token, requestContext);
             } catch (IllegalArgumentException | IllegalAccessException ex) {
-                Logger.getLogger(ContainerRequestFilterImpl.class.getName()).log(Level.SEVERE, null, ex);
+                throw new ForbiddenException();
             }
         }
     }
@@ -83,28 +72,5 @@ public class ContainerRequestFilterImpl implements ContainerRequestFilter {
         if (list.isEmpty()) {
             throw new ForbiddenException();
         }
-    }
-
-    private String createMongoDatabase(String usuario, String token, String nome) throws MessagingException, UnsupportedEncodingException {
-        MongoDbUtil mongoDbUtil = new MongoDbUtil(usuario, Usuario.class);
-        MongoClient mongoClient = mongoDbUtil.getMongoClient();
-        List<String> dbList = mongoClient.getDatabaseNames();
-        Boolean existDB = dbList.contains(usuario);
-
-        if (existDB) {
-            mongoDbUtil.closeMongoConnection();
-            return "server-messages.user-exists";
-        }
-               
-        Document document = new Document();
-        document.append("nome", usuario);
-        document.append("password", token);
-        document.append("nomeNovo", nome);
-        mongoClient.getDatabase(usuario).getCollection("Usuario").insertOne(document);
-        mongoDbUtil.closeMongoConnection();       
-        
-        EmailController emailController = new EmailController();
-        emailController.bemVindo(usuario, nome);
-        return "";
     }
 }
